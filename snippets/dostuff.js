@@ -1,0 +1,1 @@
+onresize = function(){document.getElementById( "ret" ).innerHTML = "djsgbdjhbgdhfbgjhbf"}

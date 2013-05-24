@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+
+<title>terrain test</title>
+<style>canvas{width:960px;position:relative;z-index:1;}img{position:absolute;}</style>
+<body>
+<img src = 'imagest/level.png'>
+<img src = 'imagest/playerr.png'>
+<img src = 'imagest/playerl.png'>
+<script>
+//chainvas
+(function(){var e=window.Chainvas={chainable:function(a){return function(){var b=a.apply(this,arguments);return b===void 0?this:b}},chainablizeOne:function(a,b){try{e.utils.hasOwnProperty(a,b)&&e.utils.isFunction(a[b])&&(a[b]=e.chainable(a[b]))}catch(c){}return this},chainablize:function(a,b){var c=a.prototype;if(b)for(var d=b.length;d--;)e.chainablizeOne(c,b[d]);else for(d in c)e.chainablizeOne(c,d);return this},helpers:function(a,b){var c=a.prototype,d;for(d in e.methods)c&&!(d in c)&&(c[d]=e.methods[d]);e.extend(c,b);return this},extend:function(a,b){return Chainvas.methods.prop.call(a,b)},global:function(a,b,c){typeof a==="string"&&(a=[a]);for(var d=a.length;d--;){var f=window[a[d]];f&&e.chainablize(f,c).helpers(f,b)}},methods:{prop:function(){if(arguments.length===1){var a=arguments[0],b;for(b in a)this[b]=a[b]}else arguments.length===2&&(this[arguments[0]]=arguments[1]);return this}},utils:{isFunction:function(a){var b=Object.prototype.toString.call(a);return b==="[object Function]"||b==="[object Object]"&& "call"in a&&"apply"in a&&/^\s*\bfunction\s+\w+\([\w,]*\) \{/.test(a+"")},hasOwnProperty:function(a,b){try{return a.hasOwnProperty(b)}catch(c){return b in a&&(!a.prototype||!(b in a.prototype)||a.prototype[b]!==a[b])}}}}})();
+Chainvas.chainablize(Element)
+Chainvas.helpers(Element)
+Chainvas.chainablize(CanvasRenderingContext2D)
+Chainvas.helpers(CanvasRenderingContext2D)
+
+//allows use of Math functions in global scope https://gist.github.com/2221488
+;(function(a,b){for(b in a=Object.getOwnPropertyNames(Math))this[a[b]]=Math[a[b]]})()
+//useful math functions:
+var dir=function(a){return a>0?1:a<0?-1:0}
+
+//key press handling
+var key={}
+
+;(function(foo){
+	onkeydown=function(e){foo(true,e)}
+	onkeyup=function(e){foo(false,e)}
+
+	foo=function(a,e){
+		key[{
+			37:"left",
+			39:"right",
+			32:"space",
+			38:"up",
+			40:"down"
+		}[e.keyCode]]=a
+	}
+})()
+//only initialize game ounce images have loaded
+onload=function(){
+
+	//global variables
+	var w=480, h=320, FPS = 30, scaling=2, level = [];
+
+	//images
+	var
+	 levelimg = document.images[0]
+	,playerr  = document.images[1]
+	,playerl  = document.images[2]
+
+	//turn level into 2d array
+	;(function(a,i,j){
+		a=document.createElement("canvas").prop({width:w,height:h}).getContext("2d").drawImage(levelimg,0,0).getImageData(0,0,w,h).data;
+		for(i=0;i<w;i++){level[i]=[];for(j=0;j<h;j++)level[i][j]=a[j*w+i<<2]<20}
+	})()
+
+	//collision detection with level terrain
+	var terraincheck = function(x,y,object,ow,oh){
+		x+=object.x; y+=object.y; ow=object.w; oh=object.h
+		return level [x] [y]    || level [ow+x] [y]    ||
+			   level [x] [oh+y] || level [ow+x] [oh+y] || y<0 || x<0 || ow+x>w
+	}
+
+	var player={
+		x:180, y:150, w:playerr.width, h:playerr.height-1, yspeed:0, image:playerr
+		,move:function(x,y,a){a=false;if(!terraincheck(x,y,this))this.x += x,this.y += y,a=true;return a}
+		,update: function(i){
+
+			//move left or right
+			if(i=key.left?-1:key.right?1:0){
+				this.move(3*i,0)||this.move(i,-2)
+				this.image=~i?playerr:playerl
+			}
+
+			//jump if character is on floor and doesn't have ceiling over it.
+			if(key.up&&terraincheck(0,5,this)&&!terraincheck(0,-8,this))this.yspeed=-6
+			
+			//pixel perfect vertical movement
+			for(i=abs(this.yspeed);i--;)this.move(0, dir(this.yspeed))
+
+			//gravity
+			this.yspeed += 1
+			if(terraincheck(0,1,this))this.yspeed=0
+		}
+	}
+
+
+
+		setInterval(function(){
+			canvas
+				.clearRect(0,0,w*scaling,h*scaling)
+				.drawImage(levelimg,0,0,levelimg.width*scaling,levelimg.height*scaling)
+			player.update()
+			canvas
+				.drawImage(player.image,(player.x|0)*scaling,(player.y|0)*scaling,player.image.width*scaling,player.image.height*scaling)
+
+		},1e3/FPS)
+
+		//create the actual canvas
+		canvas=document.body.appendChild(
+			document.createElement("canvas")
+				.prop({ width:w*scaling, height:h*scaling })
+		).getContext("2d").prop({webkitImageSmoothingEnabled:false, mozImageSmoothingEnabled:false})
+        
+}
+</script>

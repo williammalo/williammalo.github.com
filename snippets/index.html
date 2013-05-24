@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<title>Space Demo</title>
+
+<body onkeydown=keys(true,event) onkeyup=keys(false,event)>
+<script>
+
+var CANVAS_WIDTH=480, CANVAS_HEIGHT=320, FPS = 30;
+var keydownleft=0, keydownright=0 ,keydownspace=0 ,keydownup=0 ,keydowndown=0;
+
+//lib
+
+[XMLHttpRequest,Element,Array,CanvasRenderingContext2D] //constructors that will be affected by the library
+.forEach(function(z,b,c){
+	for(a in b=z.prototype)with({d:b[a]})typeof d=='function'?b[a]=function(){return(c=d.apply(this,arguments))===a._?this:c}:0;
+	z.prototype.prop=function(a,b){for(b in a)this[b]=a[b];return this}
+});
+
+//mathglobalizr: https://gist.github.com/2221488
+(function(a,b){for(b in a=Object.getOwnPropertyNames(Math))this[a[b]]=Math[a[b]]})();
+
+
+//lib
+
+
+function keys(a,e){
+	if(e.keyCode==37)keydownleft  = a
+	if(e.keyCode==39)keydownright = a
+	if(e.keyCode==32)keydownspace = a
+	if(e.keyCode==38)keydownup    = a
+	if(e.keyCode==40)keydowndown  = a
+}
+
+function collides(a,b){
+return  a.x<b.x+b.width&
+		a.x+a.width>b.x&
+		a.y<b.y+b.height&
+		a.y+a.height>b.y
+}
+
+
+//var enemyimg  = new Image
+//enemyimg.src  = 'images/enemy.png'
+(enemyimg = new Image).src = 'images/enemy.png';
+(playerimg= new Image).src = 'images/player.png';
+
+var player={
+	x:50, y:270, width:30, height:30
+
+	,update: function(){
+		if(keydownspace)playerBullets.push(new Bullet) 
+		if(keydownleft)player.x -= 5
+		if(keydownright)player.x += 5
+		if(keydownup)player.y -= 5
+		if(keydowndown)player.y += 5
+		player.x = min(max(player.x,0),CANVAS_WIDTH-player.width)
+		player.y = min(max(player.y,0),CANVAS_HEIGHT-player.height)
+		canvas.drawImage(playerimg,player.x,player.y)
+	}
+}
+
+playerBullets = []
+
+function Bullet(){
+	return{
+		 x : player.x + player.width/2
+		,y : player.y
+		,active : true  
+		,xspeed : 0
+		,yspeed : -7
+		,width : 3
+		,height : 3
+          
+		,update : function(){
+			this.x += this.xspeed
+			this.y += this.yspeed
+        	this.active = this.active && this.x>0&&this.x<CANVAS_WIDTH&&this.y>0&&this.y<CANVAS_HEIGHT
+        	canvas.fillStyle="#000"
+			canvas.fillRect(this.x,this.y,this.width,this.height)
+		}
+        
+		,explode : function(){this.active=false}
+    }
+}
+        
+enemies = []
+   
+function Enemy(){
+	return{
+		 active : true
+    	,x : CANVAS_WIDTH * random()
+		,y : -32
+		,xspeed : 0
+		,yspeed : random()*4   
+		,width : 32
+		,height : 32
+        
+		,update : function(){
+			this.x += this.xspeed
+			this.y += this.yspeed
+			this.active = this.active && this.y<CANVAS_HEIGHT
+			canvas.drawImage(enemyimg,this.x,this.y)
+		}
+	}
+        
+};
+
+canvas=document.body.appendChild(
+	document.createElement("canvas")
+		.prop({
+			width:CANVAS_WIDTH,
+			height:CANVAS_HEIGHT
+		})
+).getContext("2d");
+
+setInterval(function(){
+
+	//clear the canvas
+	canvas.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT)
+
+	//remove all innactive instances
+	enemies = enemies.filter(function(e){return e.active})
+	playerBullets = playerBullets.filter(function(b){return b.active})
+	
+	//run update function of every instance
+    player.update()
+	playerBullets.forEach(function(b){b.update()})
+	enemies.forEach(function(e){e.update()})
+    
+	//handle collision between instances
+	playerBullets.forEach(function(b){enemies.forEach(function(e){
+		if(collides(b,e))e.active=false,b.active=false
+	})})
+        
+	enemies.forEach(function(e){
+		if(collides(e,player))e.active=false,player.active=false
+	})
+	
+	//create new enemies
+	if(random()<.05)enemies.push(new Enemy)
+
+},1e3/FPS)
+
+</script>

@@ -1,0 +1,91 @@
+<!doctype html>
+<style>
+body{text-align:center;background:#111 url(http://tdi.maloweb.com/111noise);}
+nav>div{width:200px;height:123px;margin:20px;background:url(http://tdi.maloweb.com/slide/2);box-sizing:border-box;position:absolute;background-size:cover !important;
+border-radius:8px;
+-webkit-backface-visibility:hidden;
+-webkit-transition:all 1s;
+-moz-transition:all 1s;
+-ms-transition:all 1s;
+-o-transition:all 1s;
+transition:all 1s,filter .3s;
+-webkit-filter: grayscale(90%);
+filter: grayscale(90%);
+}
+
+nav>div:hover{
+-webkit-filter: grayscale(0%);
+-moz-filter: grayscale(0%);
+-ms-filter: grayscale(0%);
+-o-filter: grayscale(0%);
+filter: grayscale(0%);
+}
+nav{position:relative;display:inline-block;background:yellow}
+</style>
+<nav>
+<div style="background:url(http://tdi.maloweb.com/slide/2)" data-index=0></div>
+<div style="background:url(http://tdi.maloweb.com/slide/3)" data-index=1></div>
+<div style="background:url(http://tdi.maloweb.com/slide/4)" data-index=2></div>
+<div style="background:url(http://tdi.maloweb.com/slide/5)" data-index=3></div>
+<div style="background:url(http://tdi.maloweb.com/slide/6)" data-index=4></div>
+<div style="background:url(http://tdi.maloweb.com/slide/7)" data-index=5></div>
+<div style="background:url(http://tdi.maloweb.com/slide/8)" data-index=6></div>
+<div style="background:url(http://tdi.maloweb.com/slide/9)" data-index=7></div>
+<div style="background:url(http://tdi.maloweb.com/slide/10)" data-index=8></div>
+<div style="background:url(http://tdi.maloweb.com/slide/11)" data-index=9></div>
+</nav>
+<script>
+
+filter=(function(a,b,c,d){for(b in c=["Moz","Webkit","Ms","O"])if((d=c[b]+a.charAt(0).toUpperCase()+a.slice(1))in(new Image).style)a=d;return a})("filter");
+
+mason=function(m,n,w,h,margin,i){
+	var cwidth=((document.body.offsetWidth*.95)/w|0)*w;
+	m.style.width=cwidth+"px";
+	m=m.offsetWidth/w|0;
+	
+	for(i=n.length;i--;){
+		if(i<selected){
+			n[i].style.left=i%m*w+"px";
+			n[i].style.top=(i/m|0)*h+cwidth*.4+margin+"px";
+			n[i].style.width=w-margin*2+"px";
+			n[i].style.height=h-margin*2+"px";
+			n[i].style[filter]="";
+		}
+		if(i==selected){
+			n[i].style.left=0;n[i].style.top=0;
+			n[i].style.width=cwidth-margin*2+"px";
+			n[i].style.height=(cwidth-margin*2)*.4+"px";
+			n[i].style[filter]="grayscale(0%)"
+		}
+		if(i>selected){
+			n[i].style.left=(i-1)%m*w+"px";
+			n[i].style.top=((i-1)/m|0)*h+cwidth*.4+margin+"px";
+			n[i].style.width=w-margin*2+"px";
+			n[i].style.height=h-margin*2+"px";
+			n[i].style[filter]=""
+		}
+}}
+
+selected=5
+
+//masonry container:
+	m=document.getElementsByTagName("nav")[0]
+
+//masonry bricks:
+	n=m.getElementsByTagName("div");
+
+//brick dimentions:
+	margin=parseInt((getComputedStyle(n[0],null)||n[0].currentStyle).marginLeft,10)
+	w=n[0].offsetWidth+(margin*2);
+	h=n[0].offsetHeight+(margin*2);
+
+//function caller:
+	onload=onresize=function(){
+		mason(m,n,w,h,margin);
+	}
+
+var i;
+for(i=n.length;i--;){
+	n[i].onclick=function(){selected=this.getAttribute("data-index")*1;mason(m,n,w,h,margin)}
+}
+</script>
