@@ -70,9 +70,17 @@ aside{padding:0 .5em;margin-top:1.5em;}
 .figcolumn{width:25%;display:inline-block;padding:.5em;}
 a.fig{display:inline-block;overflow:hidden;color:#fff;width:100%;box-shadow:0 1px 5px rgba(0,0,0,.3);}
 a.fig:before{content:"";display:block;padding-top:50%}
-figure{margin:0;position:absolute;top:0;left:0;width:100%;height:100%}
-figcaption{background:#000;background:rgba(0,0,0,.7);position:absolute;top:-100%;left:0;width:100%;height:100%;-webkit-transition:top .3s;transition:top .3s;padding:1em;}
-figure:hover figcaption, figure:focus figcaption{top:0;}
+figure{margin:0;position:absolute;top:0;left:0;width:100%;height:100%;background:#000;}
+figure img{
+	-webkit-transition:opacity .3s;
+	transition:opacity .3s;
+}
+figcaption{position:absolute;top:-100%;left:0;width:100%;height:100%;text-shadow:0 0 5px #000;
+	-webkit-transition:top .3s,opacity .3s;
+	transition:top .3s,opacity .3s;
+	padding:1em;opacity:0;}
+figure:hover figcaption, figure:focus figcaption{top:0;opacity:1}
+figure:hover img, figure:focus img{opacity:.4}
 @media (max-width:994px){
 	h1{text-align:left;}
 	menu{margin:-1em 0 0 0}
@@ -99,7 +107,6 @@ figure:hover figcaption, figure:focus figcaption{top:0;}
 @media (max-width:380px){
 	html{font-size:16px}
 }
-
 </style>
 <h1>
 William Malo, Web Developper and Designer
