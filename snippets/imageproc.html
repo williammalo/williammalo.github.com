@@ -7,6 +7,9 @@ body{background:black}
 
 <!-- this is a black image, it is changed to yellow with javascript -->
 <img src="aniversary.png">
+<input type=number value=255 id=r>
+<input type=number value=255 id=g>
+<input type=number id=b>
 
 <script>
 
@@ -38,11 +41,15 @@ var imageFilter=function(img,filterFunction){
 
 var img=document.images[0];
 
+var rInput=document.getElementById("r");
+var gInput=document.getElementById("g");
+var bInput=document.getElementById("b");
+
 var filter=function(r,g,b,a){
   return{
-      r : 255
-    , g : 255
-    , b : 0
+      r : rInput.value
+    , g : gInput.value
+    , b : bInput.value
     , a : a
   }
 }
@@ -50,4 +57,16 @@ var filter=function(r,g,b,a){
 onload=function(){
   imageFilter(img,filter);
 }
+
+rInput.addEventListener("input",function(){
+  imageFilter(img,filter);
+})
+gInput.addEventListener("input",function(){
+  imageFilter(img,filter);
+})
+bInput.addEventListener("input",function(){
+  imageFilter(img,filter);
+})
+
+
 </script>
