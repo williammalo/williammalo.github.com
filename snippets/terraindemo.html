@@ -74,7 +74,7 @@ onload=function(){
 			}
 
 			//jump if character is on floor and doesn't have ceiling over it.
-			if(key.up&&terraincheck(0,5,this)&&!terraincheck(0,-8,this))this.yspeed=-6
+			if(key.up&&terraincheck(0,5,this)&&!terraincheck(0,-8,this))this.yspeed=-9
 			
 			//pixel perfect vertical movement
 			for(i=abs(this.yspeed);i--;)this.move(0, dir(this.yspeed))
