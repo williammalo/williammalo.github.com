@@ -5,17 +5,18 @@
 //if lt IE 9
 	script(src="//html5shim.googlecode.com/svn/trunk/html5.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js")
-base(href="//maloweb.com/")
+base(href="http://maloweb.com/")
 title William Malo
 link(rel="icon",type="image/png",href="favicon.png")
-include style.css
+style
+	include style.css
 h1 William Malo, Web Developper and Designer
 	img(data-src="lossy",class="logo",width="578",usemap="#map")
 	map(name="map")
 		area(shape="rect",coords="513,155,530,171",href="https://twitter.com/William_Malo",target="_blank",alt="Twitter")
 		area(shape="rect",coords="513,179,530,195",href="https://github.com/williammalo",target="_blank",alt="Github")
 
-address Contactez moi:<br><a href="mailto:info@maloweb.com">info@maloweb.com</a>
+address Contactez-moi:<br><a href="mailto:info@maloweb.com">info@maloweb.com</a>
 main
 	section
 		h2 Personalisation
@@ -24,22 +25,21 @@ main
 		h2 Fait avec passion
 		p Ma priorité est de faire votre site de la bonne manière. Le résultat est un site plus rapide, et plus visible par les engins de recherche.
 	section
-		h2 Optimisé pour tous les plateformes
-		p Peu importe si vous les regardez sur un téléphone ou sur un moniteur HD, mes sites utilisent la largeur de l'écran au mieux possible.
+		h2 Pour toutes les plateformes
+		p Sur un téléphone ou sur un moniteur HD, mes sites utilisent la largeur de l'écran au mieux possible.
 
 	section
 		h2 Services:
 		ul
 			li Design
 			li Développement
-			li Hébergement <i>&amp;</i> noms de domaine
 			li Consultation
 			li Jeux <i>&amp;</i> applications
 
 
 aside
 	h2 Portfolio:
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://locationbeaujean.com",target="_blank")
 			figure
 				img(data-src="clients/beau")
@@ -63,7 +63,7 @@ aside
 					h3 Action Utility Québec
 					|actionqc.com
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://lacailletransit.com",target="_blank")
 			figure
 				img(data-src="clients/lacaille")
@@ -80,7 +80,7 @@ aside
 					h3 TDI Imaging
 					|(En Construction)
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://transporthm.com/test",target="_blank")
 			figure
 				img(data-src="clients/hm")
@@ -88,7 +88,7 @@ aside
 					h3 Transport HM
 					|(En Construction)
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://horlogerieandre.com",target="_blank")
 			figure
 				img(data-src="clients/andre")
@@ -104,7 +104,7 @@ aside
 					h3 Sylvester <i>&amp;</i> Forget</h3>
 					|tsyf.com
 
-script
+script.
 	var foo=function(){
 	var a=document.querySelectorAll("[data-src]"),i;
 	for(i=a.length;i--;)

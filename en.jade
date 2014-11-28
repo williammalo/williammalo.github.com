@@ -5,10 +5,11 @@
 //if lt IE 9
 	script(src="//html5shim.googlecode.com/svn/trunk/html5.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js")
-base(href="//maloweb.com/")
+base(href="http://maloweb.com/")
 title William Malo
 link(rel="icon",type="image/png",href="favicon.png")
-include style.css
+style
+	include style.css
 h1 William Malo, Web Developper and Designer
 	img(data-src="lossy",class="logo",width="578",usemap="#map")
 	map(name="map")
@@ -22,24 +23,23 @@ main
 		p I design from scratch, to make a website that fits your company branding.
 	section
 		h2 Made with passion
-		p I <b>❤</b> the web, my websites are made with passion and craftsmanship. They are fast, modern and search engine optimised.
+		p My websites are made with passion and craftsmanship. They are fast, modern and search engine optimised.
 	section
-		h2 Webpages that look good on every device.
-		p On a smartphone, the edges won’t be cut off. On an HD monitor, it will take advantage of the extra space.
+		h2 For every device.
+		p On a smartphone, the edges won’t be cut off. On an HD monitor, they will take advantage of the extra space.
 
 	section
 		h2 What I do:
 		ul
 			li Design
 			li Front End Development
-			li Hosting <i>&amp;</i> Domain Names
 			li Consulting
 			li Web Apps <i>&amp;</i> Games
 
 
 aside
 	h2 Portfolio:
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://beaujeanleasing.com",target="_blank")
 			figure
 				img(data-src="clients/beau")
@@ -63,7 +63,7 @@ aside
 					h3 Action Utility Quebec
 					|actionqc.com
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://lacailletransit.com/en",target="_blank")
 			figure
 				img(data-src="clients/lacaille")
@@ -80,7 +80,7 @@ aside
 					h3 TDI Imaging
 					|(In Construction)
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://transporthm.com/test",target="_blank")
 			figure
 				img(data-src="clients/hm")
@@ -88,7 +88,7 @@ aside
 					h3 Transport HM
 					|(In Construction)
 
-	.figcolumn
+	//.figcolumn
 		a.fig(href="http://horlogerieandre.com/",target="_blank")
 			figure
 				img(data-src="clients/andre")
@@ -104,7 +104,7 @@ aside
 					h3 Sylvester <i>&amp;</i> Forget</h3>
 					|tsyf.com
 
-script
+script.
 	var foo=function(){
 	var a=document.querySelectorAll("[data-src]"),i;
 	for(i=a.length;i--;)
