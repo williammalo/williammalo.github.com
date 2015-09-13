@@ -223,6 +223,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/projects\/minefont.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 66765,
+		"inputAbbreviatedPath": "\/projects\/minefont.png",
+		"outputAbbreviatedPath": "\/projects\/minefont.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/snippets\/aniversary.png": {
 		"fileType": 32768,
 		"ignore": 0,
