@@ -35,6 +35,39 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/clients\/cdm.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 86222,
+		"inputAbbreviatedPath": "\/clients\/cdm.jpg",
+		"outputAbbreviatedPath": "\/clients\/cdm.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/clients\/dopdop.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 147017,
+		"inputAbbreviatedPath": "\/clients\/dopdop.jpg",
+		"outputAbbreviatedPath": "\/clients\/dopdop.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/clients\/fge.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 87864,
+		"inputAbbreviatedPath": "\/clients\/fge.jpg",
+		"outputAbbreviatedPath": "\/clients\/fge.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/clients\/hm.jpg": {
 		"fileType": 16384,
 		"ignore": 0,
@@ -53,6 +86,17 @@
 		"initialSize": 59406,
 		"inputAbbreviatedPath": "\/clients\/lacaille.jpg",
 		"outputAbbreviatedPath": "\/clients\/lacaille.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/clients\/npv.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 74079,
+		"inputAbbreviatedPath": "\/clients\/npv.jpg",
+		"outputAbbreviatedPath": "\/clients\/npv.jpg",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"processed": 0
