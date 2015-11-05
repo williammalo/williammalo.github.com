@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class=''>
-<head><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="canonical" href="http://codepen.io/WilliamMalo/pen/gaYmWq?editors=110" />
+<head><meta charset='UTF-8'>
 
 <script src='//codepen.io/assets/libs/prefixfree.min.js'></script>
 <style class="cp-pen-styles">/*@import url(http://fonts.googleapis.com/css?family=Cutive+Mono);*/
@@ -745,6 +745,30 @@ h4 {
   </div>
 </div>
 <hr>
+<h1 class="center">Contributions</h1>
+<div class="row">
+  <div class="pad fourth bp1-hide bp2-show">
+    <a href="http://coursedesmoissons.com/"><img class="fancyborder" src="http://zdg.ca/img/cdm.jpg" alt="" /></a></p>
+    <h4>Course des moissons</h4>
+    <p>for <a href="http://zdg.ca">Zeste de Genie</a></p>
+  </div>
+  <div class="pad fourth">
+    <a href="http://nezpourvivre.com/"><img class="fancyborder" src="http://zdg.ca/img/npv.jpg" alt="" /></a></p>
+    <h4>Nez pour vivre</h4>
+    <p>for <a href="http://zdg.ca">Zeste de Genie</a></p>
+  </div>
+  <div class="pad fourth">
+    <a href="http://gouverneursdelespoir.com/"><img class="fancyborder" src="http://zdg.ca/img/fge.jpg" alt="" /></a></p>
+    <h4>Gouverneurs de l'espoir</h4>
+    <p>for <a href="http://zdg.ca">Zeste de Genie</a></p>
+  </div>
+  <div class="pad fourth">
+    <a href="http://www.dopdopsalon.com/staff.php"><img class="fancyborder" src="http://maloweb.com/clients/dopdop.jpg" alt="" /></a></p>
+    <h4>Dop&nbsp;Dop&nbsp;Salon staff&nbsp;page</h4>
+    <p>for <a href="http://www.mywebsitespot.com">My Website Spot</a></p>
+  </div>
+</div>
+<hr>
 <h1 class="center">Code Projects</h1>
 <div class="row">
   <div class="pad fourth">
@@ -812,11 +836,42 @@ h4 {
     </ul>
   </div>
 </div>
+<!--
+<hr>
+<h1 class="center">Articles</h1>
+<article>
+  <h2> <span>How to improve your OSX experience</span>
+  </h2>
+  <p><del>Mac os</del><ins class="over">OSX</ins> is great, but some of the default options really annoy me. Here are the settings I change when I get a new machine:</p>
+  <ul>
+    <li>No popup when running apps for the first time:<code class="language-bash">defaults write com.apple.LaunchServices LSQuarantine -bool false</code></li>
+    <li>Enable text selection in quicklook:<code class="language-bash">defaults write com.apple.finder QLEnableTextSelection -bool true</code></li>
+    <li>No popup when renaming file extensions:<code class="language-bash">defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false</code></li>
+    <li>Make exposé not group windows by app:<code class="language-bash">defaults write com.apple.dock expose-group-by-app -bool false</code></li>
+    <li>In finder, search in current directory by default:<code class="language-bash">defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"</code></li>
+    <li>
+      Disable spolight menu icon
+      (Good if you use Quicksilver or Alfred.):<code class="language-bash">mv /System/Library/CoreServices/Search.bundle /System/Library/CoreServices/Search.bundle.bak</code>
+    </li>
+  </ul>
 
+
+</article>
+
+<h2>Hashtag links that don't scroll the page.</h2>
+  <p>
+    Hashtag links are great for storing state without using javascript, but in most browsers, the page scrolls to the target element when you click the link.
+    I wanted to use the ":target" selector in css to make javascript-less menus and tabs, but this behavior got in the way.
+    I found that making the target element "position:fixed" fixes the problem in all browsers.
+    Then you can style any element coming after the target like this:
+    </p>
+  <code class="language-css">#realtarget:target~#faketarget{color:blue}</code>
+<p>I made a little demo of this technique on codepen. Every link will target the #foo element and turn links blue, without scrolling the page. <a href="http://codepen.io/WilliamMalo/pen/ifbsK">codepen.io/WilliamMalo/pen/ifbsK</a>
+  </p>-->
 
 <script>
 document.body.lang = 'en';
-//@ sourceURL=pen.js
+//# sourceURL=pen.js
 </script>
 
 </body></html>
