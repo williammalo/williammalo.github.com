@@ -214,13 +214,24 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
-	"\/misc\/logo-2.png": {
+	"\/misc\/zdg-xmas.png": {
 		"fileType": 32768,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"initialSize": 3347,
-		"inputAbbreviatedPath": "\/misc\/logo-2.png",
-		"outputAbbreviatedPath": "\/misc\/logo-2.png",
+		"inputAbbreviatedPath": "\/misc\/zdg-xmas.png",
+		"outputAbbreviatedPath": "\/misc\/zdg-xmas.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/misc\/zdg-xmas2.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 12242,
+		"inputAbbreviatedPath": "\/misc\/zdg-xmas2.png",
+		"outputAbbreviatedPath": "\/misc\/zdg-xmas2.png",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"processed": 0
