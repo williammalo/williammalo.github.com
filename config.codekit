@@ -214,6 +214,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/misc\/logo-2.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 3347,
+		"inputAbbreviatedPath": "\/misc\/logo-2.png",
+		"outputAbbreviatedPath": "\/misc\/logo-2.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/otama\/stylesheet.css": {
 		"fileType": 16,
 		"ignore": 0,
