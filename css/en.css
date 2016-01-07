@@ -466,6 +466,9 @@ h4 {
   top: 1em;
   right: 1em;
 }
+.social a {
+  text-decoration: none;
+}
 .codepen {
   margin-left: 2px;
   position: relative;
