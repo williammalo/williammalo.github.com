@@ -35,6 +35,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/clients\/camps.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 479953,
+		"inputAbbreviatedPath": "\/clients\/camps.jpg",
+		"outputAbbreviatedPath": "\/clients\/camps.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/clients\/cdm.jpg": {
 		"fileType": 16384,
 		"ignore": 0,
@@ -134,14 +145,41 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
-	"\/en.html": {
-		"fileType": 8192,
+	"\/css\/en.css": {
+		"fileType": 16,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/en.html",
+		"inputAbbreviatedPath": "\/css\/en.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
+		},
+	"\/en.jade": {
+		"compileDebug": 1,
+		"fileType": 512,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/en.jade",
+		"outputAbbreviatedPath": "\/en.html",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 0
+		},
+	"\/en.styl": {
+		"createSourceMap": 0,
+		"debugStyle": 0,
+		"fileType": 8,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"importCSS": 0,
+		"inputAbbreviatedPath": "\/en.styl",
+		"outputAbbreviatedPath": "\/css\/en.css",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 0,
+		"resolveRelativeURLS": 0,
+		"shouldRunAutoprefixer": 0,
+		"shouldRunBless": 0
 		},
 	"\/favicon.png": {
 		"fileType": 32768,
