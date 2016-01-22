@@ -127,7 +127,7 @@
 		"fileType": 16384,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"initialSize": 57498,
+		"initialSize": 59439,
 		"inputAbbreviatedPath": "\/clients\/signshop.jpg",
 		"outputAbbreviatedPath": "\/clients\/signshop.jpg",
 		"outputPathIsOutsideProject": 0,
@@ -222,6 +222,26 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"processed": 0
+		},
+	"\/fr-new.html": {
+		"fileType": 8192,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/fr-new.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/fr-new.jade": {
+		"compileDebug": 1,
+		"fileType": 512,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/fr-new.jade",
+		"outputAbbreviatedPath": "\/fr-new.html",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 0
 		},
 	"\/fr.html": {
 		"fileType": 8192,
