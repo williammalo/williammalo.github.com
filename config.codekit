@@ -123,6 +123,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/clients\/signshop.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 59953,
+		"inputAbbreviatedPath": "\/clients\/signshop.jpg",
+		"outputAbbreviatedPath": "\/clients\/signshop.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/clients\/sylvester.jpg": {
 		"fileType": 16384,
 		"ignore": 0,
