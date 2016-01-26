@@ -221,7 +221,7 @@
 		"outputAbbreviatedPath": "\/fr-new.html",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
-		"outputStyle": 0
+		"outputStyle": 1
 		},
 	"\/fr.html": {
 		"fileType": 8192,
@@ -502,7 +502,7 @@
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
 		"resolveRelativeURLS": 0,
-		"shouldRunAutoprefixer": 0,
+		"shouldRunAutoprefixer": 1,
 		"shouldRunBless": 0
 		}
 	},
