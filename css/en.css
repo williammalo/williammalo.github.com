@@ -652,3 +652,8 @@ h4 {
     font-size: 4.666vw;
   }
 }
+/*
+html{
+  background: linear-gradient(45deg, #fff 0%,#fff 12.5%, #fdd 12.5%, #fdd 25% ,  #fff 25%,#fff 37.5% , #cfc 37.5%, #cfc 50% , #fff 50% , #fff 62.5%, #fdd 62.5%,#fdd 75% ,#fff 75% ,#fff 87.5% , #cfc 87.5%, #cfc 100% );
+  background-size:120px 120px;
+}*/
