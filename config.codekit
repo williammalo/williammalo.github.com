@@ -363,6 +363,15 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
+	"\/en.html": {
+		"fileType": 8192,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/en.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
 	"\/en.jade": {
 		"compileDebug": 1,
 		"fileType": 512,
@@ -464,6 +473,15 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1
+		},
+	"\/fr.html": {
+		"fileType": 8192,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/fr.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
 		},
 	"\/fr.jade": {
 		"compileDebug": 1,
@@ -726,6 +744,17 @@
 		"initialSize": 4624,
 		"inputAbbreviatedPath": "\/snippets\/imagest\/level.png",
 		"outputAbbreviatedPath": "\/snippets\/imagest\/level.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/imagest\/player-collision.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 90,
+		"inputAbbreviatedPath": "\/snippets\/imagest\/player-collision.png",
+		"outputAbbreviatedPath": "\/snippets\/imagest\/player-collision.png",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"processed": 0
