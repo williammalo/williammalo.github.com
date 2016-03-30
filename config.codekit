@@ -737,17 +737,6 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
-	"\/snippets\/imagest\/level.png": {
-		"fileType": 32768,
-		"ignore": 0,
-		"ignoreWasSetByUser": 0,
-		"initialSize": 4624,
-		"inputAbbreviatedPath": "\/snippets\/imagest\/level.png",
-		"outputAbbreviatedPath": "\/snippets\/imagest\/level.png",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"processed": 0
-		},
 	"\/snippets\/imagest\/player-collision.png": {
 		"fileType": 32768,
 		"ignore": 0,

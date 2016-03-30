@@ -19,7 +19,14 @@ Chainvas.helpers(CanvasRenderingContext2D)
 //allows use of Math functions in global scope https://gist.github.com/2221488
 ;(function(a,b){for(b in a=Object.getOwnPropertyNames(Math))this[a[b]]=Math[a[b]]})()
 //useful math functions:
-var dir=function(a){return a>0?1:a<0?-1:0}
+Math.sign = Math.sign || function(x) {
+  x = +x; // convert to a number
+  if (x === 0 || isNaN(x)) {
+    return x;
+  }
+  return x > 0 ? 1 : -1;
+}
+var sign = Math.sign;
 
 //
 var imgToMap = function(img,a,i){
@@ -35,11 +42,17 @@ var imgToMap = function(img,a,i){
 
 
 //key press handling
-var key={}
+var key={
+	"left"  : false,
+	"right" : false,
+	"space" : false,
+	"up"    : false,
+	"down"  : false
+}
 
 ;(function(foo){
-	onkeydown=function(e){foo(true,e)}
-	onkeyup=function(e){foo(false,e)}
+	onkeydown = function(e){foo(true,e)}
+	onkeyup   = function(e){foo(false,e)}
 
 	foo=function(a,e){
 		key[{
@@ -76,16 +89,7 @@ onload=function(){
 	var playerHit = imgToMap(playerHitImg);
 	//collision detection with level terrain
 	var terraincheck = function(x,y,object){
-		var lw=480,lh=320;
-		var ow=object.w;
-		var oh=object.h;
-		x+=object.x;
-		y+=object.y;
-		return level [x+y*lw]      || level [ow+x+y*lw]      ||
-			   level [x+(oh+y)*lw] || level [ow+x+(oh+y)*lw] || y<0 || x<0 || ow+x>w
-	}
-	terraincheck = function(x,y,object){
-		var lw=480,lh=320;
+		var lw=level.w,lh=level.h
 		var w=object.w;
 		var h=object.h;
 		x+=object.x;
@@ -93,34 +97,50 @@ onload=function(){
 		var collides=0;
 		var i=0;
 		for(;i<w*h;i++){
-			collides |= level[(x+(i%w))+(y+i/w|0)*lw] & object.hit[(i%w)+(i/w|0)*w]
+			collides |= level[ (x+(i%w))+(y+i/w|0)*lw ] & object.hit[i];
+			/*if(object.hit[i])
+				canvas.fillStyle = "rgba(255,0,0,0.5)",
+				canvas.fillRect((x+(i%w))*2, (y+i/w|0)*2, 2, 2);
+			else
+				canvas.fillStyle = "rgba(0,255,0,0.5)",
+				canvas.fillRect((x+(i%w))*2, (y+i/w|0)*2, 2, 2);*/
 		}
 		return collides
 	}
 
 
 	var player={
-		x:180, y:150, w:playerr.width, h:playerr.height-1, yspeed:0, image:playerr, hit:playerHit
-		,move:function(x,y,a){a=false;if(!terraincheck(x,y,this))this.x += x,this.y += y,a=true;return a}
+		x:180, y:150, w:playerr.width, h:playerr.height, yspeed:0, image:playerr, hit:playerHit
+		,move:function(x,y,a){
+			a=false;
+			if(!terraincheck(x,y,this)){
+				this.x += x;
+				this.y += y;
+				a=true;
+			}
+			return a
+		}
 		,update: function(i){
-
 			//move left or right
-			if(i=key.left?-1:key.right?1:0){
-				this.move(3*i,0)||this.move(i,-2)
-				this.image=~i?playerr:playerl
+			var direction = key.right-key.left;
+			if(direction){
+				this.move(3*direction,0)||this.move(2*direction,-1)||this.move(direction,-2)
+				this.image=~direction?playerr:playerl
 			}
 
 			//jump if character is on floor and doesn't have ceiling over it.
 			if(key.up&&terraincheck(0,5,this)&&!terraincheck(0,-8,this))this.yspeed=-9
 			
 			//pixel perfect vertical movement
-			for(i=abs(this.yspeed);i--;)this.move(0, dir(this.yspeed))
+			for(i=abs(this.yspeed);i--;)this.move(0, sign(this.yspeed))
 
 			//gravity
 			this.yspeed += 1
 			if(terraincheck(0,1,this))this.yspeed=0
+
 		}
 	}
+	window.player=player;
 
 
 
@@ -128,9 +148,10 @@ onload=function(){
 			canvas
 				.clearRect(0,0,w*scaling,h*scaling)
 				.drawImage(levelimg,0,0,levelimg.width*scaling,levelimg.height*scaling)
-			player.update()
+			
 			canvas
 				.drawImage(player.image,(player.x|0)*scaling,(player.y|0)*scaling,player.image.width*scaling,player.image.height*scaling)
+			player.update()
 
 		},1e3/FPS)
 
