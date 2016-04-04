@@ -34,7 +34,7 @@ var imgToMap = function(img,a,i){
 	var w=img.width,h=img.height;
 	a=document.createElement("canvas").prop({width:w,height:h}).getContext("2d").drawImage(img,0,0).getImageData(0,0,w,h).data;
 
-	for(i=0;i<w*h;i++) hitMap[i]=a[i<<2]<20
+	for(i=0;i<w*h;i++) hitMap[i]=a[i<<2]<128
 	hitMap.w=w;
 	hitMap.h=h;
 	return hitMap
@@ -43,11 +43,11 @@ var imgToMap = function(img,a,i){
 
 //key press handling
 var key={
-	"left"  : false,
-	"right" : false,
-	"space" : false,
-	"up"    : false,
-	"down"  : false
+	left  : false,
+	right : false,
+	space : false,
+	up    : false,
+	down  : false
 }
 
 ;(function(foo){
@@ -56,26 +56,31 @@ var key={
 
 	foo=function(a,e){
 		key[{
-			37:"left",
-			39:"right",
-			32:"space",
-			38:"up",
-			40:"down"
+			37 : "left",
+			39 : "right",
+			32 : "space",
+			38 : "up",
+			40 : "down"
 		}[e.keyCode]]=a
 	}
 })()
+
+
 //only initialize game ounce images have loaded
 onload=function(){
 
-	var view={
-		 w:480
-		,h:320
-		,x:0
-		,y:0
-	}
-
 	//global variables
 	var w=480, h=320, FPS = 30, scaling=2;
+
+	var defaultDraw = function(){
+		canvas.drawImage(
+			 this.image
+			,(this.x|0)*scaling
+			,(this.y|0)*scaling
+			,this.w*scaling
+			,this.h*scaling
+		)
+	}
 
 	//images
 	var
@@ -84,43 +89,77 @@ onload=function(){
 	,playerl      = document.images[2]
 	,playerHitImg = document.images[3];
 
-	//turn level into 2d array
-	var level     = imgToMap(levelimg);
-	var playerHit = imgToMap(playerHitImg);
+
+	var level={
+		 x     : 0
+		,y     : 0
+		,w     : 480
+		,h     : 320
+		,hit   : imgToMap(levelimg)
+		,image : levelimg
+		,draw  : defaultDraw
+	};
+
 	//collision detection with level terrain
-	var terraincheck = function(x,y,object){
-		var lw=level.w,lh=level.h
-		var w=object.w;
-		var h=object.h;
-		x+=object.x;
-		y+=object.y;
-		var collides=0;
-		var i=0;
-		for(;i<w*h;i++){
-			collides |= level[ (x+(i%w))+(y+i/w|0)*lw ] & object.hit[i];
-			/*if(object.hit[i])
-				canvas.fillStyle = "rgba(255,0,0,0.5)",
-				canvas.fillRect((x+(i%w))*2, (y+i/w|0)*2, 2, 2);
-			else
-				canvas.fillStyle = "rgba(0,255,0,0.5)",
-				canvas.fillRect((x+(i%w))*2, (y+i/w|0)*2, 2, 2);*/
-		}
-		return collides
+
+
+	var collides = function(o1,o2,xoff,yoff){
+
+		xoff |= 0 //offset of object 2 (optional)
+		yoff |= 0 
+
+		var ᑎx, ᑎy, ᑎx2, ᑎy2, ᑎw, ᑎh, ᑎA, i, ix, iy, ix1, iy1, ix2, iy2;
+        
+        // check if two objects intersect (ᑎ)
+		ᑎx  = max( o1.x , o2.x+xoff );
+		ᑎy  = max( o1.y , o2.y+yoff );
+    	ᑎx2 = min( o1.x+o1.w , o2.x+xoff+o2.w );
+	    ᑎy2 = min( o1.y+o1.h , o2.y+yoff+o2.h );
+
+	    if (ᑎx2 > ᑎx && ᑎy2 > ᑎy) {
+
+            ᑎw = ᑎx2 - ᑎx;
+            ᑎh = ᑎy2 - ᑎy;
+            ᑎA = ᑎw * ᑎh;
+
+			for(i=0;i<ᑎA;i++){// check every pixel inside ᑎ for collision
+
+				// position of iterator
+				ix = ( i%ᑎw )
+				iy = (i/ᑎw|0)
+				// position of iterator inside o1
+				ix1 = ix - (o1.x - ᑎx);
+				iy1 = iy - (o1.y - ᑎy);
+				// position of iterator inside o2
+				ix2 = ix - (o2.x+xoff - ᑎx);
+				iy2 = iy - (o2.y+yoff - ᑎy); 
+
+				if( o1.hit[ iy1*o1.w+ix1 ] & o2.hit[ iy2*o2.w+ix2 ] ) return 1
+				
+			}
+	    }
+	    return 0;
 	}
 
-
 	var player={
-		x:180, y:150, w:playerr.width, h:playerr.height, yspeed:0, image:playerr, hit:playerHit
-		,move:function(x,y,a){
-			a=false;
-			if(!terraincheck(x,y,this)){
+		 x     : 180
+		,y     : 150
+		,w     : playerr.width
+		,h     : playerr.height
+		,yυ    : 0
+		,image : playerr
+		,hit   : imgToMap(playerHitImg)
+
+		,move: function(x,y){
+			var a=false;
+			if(!collides(level,this,x,y)){
 				this.x += x;
 				this.y += y;
 				a=true;
 			}
 			return a
 		}
-		,update: function(i){
+		,update: function(){
 			//move left or right
 			var direction = key.right-key.left;
 			if(direction){
@@ -129,29 +168,29 @@ onload=function(){
 			}
 
 			//jump if character is on floor and doesn't have ceiling over it.
-			if(key.up&&terraincheck(0,5,this)&&!terraincheck(0,-8,this))this.yspeed=-9
+			if(key.up&&collides(level,this,0,1)&&!collides(level,this,0,-8))this.yυ=-9
 			
 			//pixel perfect vertical movement
-			for(i=abs(this.yspeed);i--;)this.move(0, sign(this.yspeed))
+			for(var i=abs(this.yυ);i--;)this.move(0, sign(this.yυ))
 
 			//gravity
-			this.yspeed += 1
-			if(terraincheck(0,1,this))this.yspeed=0
+			this.yυ += 1
+			if(collides(level,this,0,1))this.yυ=0
 
 		}
+		,draw: defaultDraw
 	}
-	window.player=player;
-
 
 
 		setInterval(function(){
+
+			player.update()
 			canvas
 				.clearRect(0,0,w*scaling,h*scaling)
-				.drawImage(levelimg,0,0,levelimg.width*scaling,levelimg.height*scaling)
-			
-			canvas
-				.drawImage(player.image,(player.x|0)*scaling,(player.y|0)*scaling,player.image.width*scaling,player.image.height*scaling)
-			player.update()
+
+			level.draw()
+			player.draw()
+
 
 		},1e3/FPS)
 
