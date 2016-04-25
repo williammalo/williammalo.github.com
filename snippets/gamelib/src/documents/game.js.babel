@@ -1,0 +1,248 @@
+
+//chainvas
+(function(){var e=window.Chainvas={chainable:function(a){return function(){var b=a.apply(this,arguments);return b===void 0?this:b}},chainablizeOne:function(a,b){try{e.utils.hasOwnProperty(a,b)&&e.utils.isFunction(a[b])&&(a[b]=e.chainable(a[b]))}catch(c){}return this},chainablize:function(a,b){var c=a.prototype;if(b)for(var d=b.length;d--;)e.chainablizeOne(c,b[d]);else for(d in c)e.chainablizeOne(c,d);return this},helpers:function(a,b){var c=a.prototype,d;for(d in e.methods)c&&!(d in c)&&(c[d]=e.methods[d]);e.extend(c,b);return this},extend:function(a,b){return Chainvas.methods.prop.call(a,b)},global:function(a,b,c){typeof a==="string"&&(a=[a]);for(var d=a.length;d--;){var f=window[a[d]];f&&e.chainablize(f,c).helpers(f,b)}},methods:{prop:function(){if(arguments.length===1){var a=arguments[0],b;for(b in a)this[b]=a[b]}else arguments.length===2&&(this[arguments[0]]=arguments[1]);return this}},utils:{isFunction:function(a){var b=Object.prototype.toString.call(a);return b==="[object Function]"||b==="[object Object]"&& "call"in a&&"apply"in a&&/^\s*\bfunction\s+\w+\([\w,]*\) \{/.test(a+"")},hasOwnProperty:function(a,b){try{return a.hasOwnProperty(b)}catch(c){return b in a&&(!a.prototype||!(b in a.prototype)||a.prototype[b]!==a[b])}}}}})();
+Chainvas.chainablize(Element)
+Chainvas.helpers(Element)
+Chainvas.chainablize(CanvasRenderingContext2D)
+Chainvas.helpers(CanvasRenderingContext2D)
+
+
+//polyfill
+Math.sign = Math.sign || function(x) {
+  x = +x; // convert to a number
+  if (x === 0 || isNaN(x)) {
+    return x;
+  }
+  return x > 0 ? 1 : -1;
+}
+var {sign,abs,min,max} = Math;
+
+//
+var imgToMap = function(img,a,i){
+	var hitMap =[ ];
+	var w=img.width,h=img.height;
+	a=document.createElement("canvas").prop({width:w,height:h}).getContext("2d").drawImage(img,0,0).getImageData(0,0,w,h).data;
+
+	for(i=0;i<w*h;i++) hitMap[i]=a[i<<2]<128
+	hitMap.w=w;
+	hitMap.h=h;
+	return hitMap
+};
+
+var bakedMap = function(m1,m2){
+	var m3 = [];
+	var m1w = m1.w
+	var m1h = m1.h
+	var m2w = m2.w
+	var m2h = m2.h
+	var m3w = m2w+m1w
+	var m3h = m2h+m1h
+	var i,ix,iy
+
+	for(i=0;i<m3w*m3h;i++){
+		ix = ( i%m3w )
+		iy = (i/m3w|0)
+		m3[i] = ᑎ.mapMap(m2w,m2h,m1w,m1h,ix,iy,m2w,m2h,m1,m2)
+	}
+	m3.w=m3w
+	m3.h=m3h
+	return m3
+}
+
+//key press handling
+var key={
+	left  : 0,
+	right : 0,
+	space : 0,
+	up    : 0,
+	down  : 0,
+	"ᐊ"   : 0,
+	"ᐅ"   : 0,
+	"ᐃ"   : 0,
+	"ᐁ"   : 0
+}
+
+;(function(foo){
+	onkeydown = function(e){foo(1,e)}
+	onkeyup   = function(e){foo(0,e)}
+
+	foo=function(a,e){
+		key[{
+			37 : "left",
+			39 : "right",
+			32 : "space",
+			38 : "up",
+			40 : "down"
+		}[e.keyCode]]=a
+		key[{
+			37 : "ᐊ",
+			39 : "ᐅ",
+			38 : "ᐃ",
+			40 : "ᐁ"
+		}[e.keyCode]]=a
+	}
+})()
+
+
+//only initialize game ounce images have loaded
+onload=function(){
+	"use strict";
+
+	//global variables
+	var w=480, h=320, FPS = 30, scaling=2;
+
+	var defaultDraw = function(){
+		canvas.drawImage(
+			 this.image
+			,(this.x|0)*scaling
+			,(this.y|0)*scaling
+			,this.w*scaling
+			,this.h*scaling
+		)
+	}
+
+	//images
+	var  levelimg     = document.images[0]
+		,playerr      = document.images[1]
+		,playerl      = document.images[2]
+		,playerHitImg = document.images[3];
+
+	var levelMap  = imgToMap(levelimg)
+	var playerMap = imgToMap(playerHitImg)
+	var levelPlayerMap = bakedMap(levelMap,playerMap)
+
+	//var [ levelimg, playerr, playerl, playerHitImg ] = document.images;
+
+
+	var level={
+		 x     : 0
+		,y     : 0
+		,w     : 480
+		,h     : 320
+		//,hit   : levelMap
+		,image : levelimg
+	};
+
+	//collision detection functions for both collision maps and simple rectangles
+
+	var loop = function(n,f){
+		var i=0;
+		n = abs(n)
+		for(i=0;i<n;i++) f(i);
+	}
+
+	var collides = function(o1,xoff,yoff){
+
+		xoff |= 0 //offset of object 2 (optional)
+		yoff |= 0
+
+		//inputs to the function
+
+		var o1x = o1.x |0
+		var o1y = o1.y |0
+
+		var o2x = this.x + xoff |0
+		var o2y = this.y + yoff |0
+
+		var o1w =   o1.w |0
+		var o1h =   o1.h |0
+		var o2w = this.w |0
+		var o2h = this.h |0
+
+		if(   o1.hit  &&   this.hit  ) return ᑎ.mapMap( o1x, o1y, o1w, o1h, o2x, o2y, o2w, o2h, o1.hit, this.hit )
+		if(   o1.hit  && (!this.hit) ) return ᑎ.mapBox( o1x, o1y, o1w, o1h, o2x, o2y, o2w, o2h, o1.hit           )
+		if( (!o1.hit) &&   this.hit  ) return ᑎ.boxMap( o1x, o1y, o1w, o1h, o2x, o2y, o2w, o2h, this.hit         )
+		if( (!o1.hit) && (!this.hit) ) return ᑎ.boxBox( o1x, o1y, o1w, o1h, o2x, o2y, o2w, o2h                   )
+
+	};
+
+	var Player = function(x,y){
+		var  w     = playerr.width
+			,h     = playerr.height
+			,vy    = 0
+			,image = playerr
+			//,hit   = playerMap;
+
+		Object.defineProperties(this, {
+    		x    :{get: ()=>x     ,set: a=>     x = a },
+    		y    :{get: ()=>y     ,set: a=>     y = a },
+    		w    :{get: ()=>w     ,set: a=>     w = a },
+    		h    :{get: ()=>h     ,set: a=>     h = a },
+    		vy   :{get: ()=>vy    ,set: a=>    vy = a },
+    		image:{get: ()=>image ,set: a=> image = a },
+    		hit  :{get: ()=>hit   ,set: a=>   hit = a },
+		})
+
+		//this.collides=collides
+		//var ᑎ = (x,y)=>this.collides(level,x,y)
+
+		var ᑎ = (Δx,Δy)=>{
+			var mw = levelPlayerMap.w;
+			
+			return levelPlayerMap[  x+Δx+w+(y+Δy+h)*mw  ]|0
+		}
+
+		var move=function(Δx,Δy){
+			var free=!ᑎ(Δx,Δy);
+			if(free){
+				x += Δx;
+				y += Δy;
+			}
+			return free
+		}
+
+		var walk=function(v){
+			var d = sign(v);
+			move(v,0)||move(v>>1,-1)||move(v>>2,-2)
+			image=~d?playerr:playerl
+		}
+
+		this.update=function(){
+			var {ᐅ,ᐊ,ᐃ,ᐁ} = key
+
+			var d = ᐅ - ᐊ
+			d && walk( d*4 )
+			ᐃ && ᑎ( 0, 1 ) && !ᑎ( 0, -1 ) && ( vy = -9 )
+			loop( vy, i=>(move(0,sign(vy))||(vy=0)) )
+			vy += 1
+			vy = min(vy,20) //terminal velocity
+
+		}
+	}
+	var player = new Player(180,150);
+
+	window.player=player
+
+		var gameObjects = [ level, player];
+
+		loop(10000,i=>{gameObjects.push(new Player(180,150-i))})
+
+		setInterval(function(){
+
+			canvas
+				.clearRect(0,0,w*scaling,h*scaling)
+
+			var i, l = gameObjects.length;
+			for(i=0;i<l;i++){
+				
+				if(gameObjects[i].update)
+					gameObjects[i].update()
+
+
+				if(gameObjects[i].draw){
+					gameObjects[i].draw()
+				}else if(gameObjects[i].image){
+					defaultDraw.apply(gameObjects[i]);
+				}
+			}
+
+
+		},1e3/FPS)
+
+		//create the actual canvas
+		var canvas=document.body.appendChild(
+			document.createElement("canvas")
+				.prop({ width:w*scaling, height:h*scaling })
+		).getContext("2d").prop({webkitImageSmoothingEnabled:false, mozImageSmoothingEnabled:false})
+        
+}
