@@ -295,9 +295,7 @@ onload = function onload() {
 
 	var gameObjects = [level, player];
 
-	loop(10000, function (i) {
-		gameObjects.push(new Player(180, 150 - i));
-	});
+	//loop(10000,i=>{gameObjects.push(new Player(180,150-i))})
 
 	setInterval(function () {
 
