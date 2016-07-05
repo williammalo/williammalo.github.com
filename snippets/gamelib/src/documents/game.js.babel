@@ -30,7 +30,7 @@ var imgToMap = function(img,a,i){
 };
 
 var bakedMap = function(m1,m2){
-	var m3 = [];
+	var m3  = []
 	var m1w = m1.w
 	var m1h = m1.h
 	var m2w = m2.w
@@ -83,6 +83,26 @@ var key={
 	}
 })()
 
+var loop = function(n,f){
+	var i=0;
+	n = abs(n)
+	for(i=0;i<n;i++) f(i);
+}
+
+window.fps=30
+
+
+//benchmark
+
+window.addEventListener("keydown",function(e){
+	if(e.keyCode==32){
+		var foo=new Date()
+		loop(1000000,player.update)
+		fps= new Date()-foo;
+		alert("fps="+Math.round(1000/window.fps))
+	}
+})
+
 
 //only initialize game ounce images have loaded
 onload=function(){
@@ -124,12 +144,6 @@ onload=function(){
 	};
 
 	//collision detection functions for both collision maps and simple rectangles
-
-	var loop = function(n,f){
-		var i=0;
-		n = abs(n)
-		for(i=0;i<n;i++) f(i);
-	}
 
 	var collides = function(o1,xoff,yoff){
 
@@ -176,11 +190,14 @@ onload=function(){
 		//this.collides=collides
 		//var ᑎ = (x,y)=>this.collides(level,x,y)
 
-		var ᑎ = (Δx,Δy)=>{
-			var mw = levelPlayerMap.w;
-			
-			return levelPlayerMap[  x+Δx+w+(y+Δy+h)*mw  ]|0
-		}
+		var ᑎ;
+		((mw,m,ow)=>{
+			//cache variables for performance
+			m  = levelPlayerMap;
+			mw = m.w;
+			ow = w;
+			ᑎ = (Δx,Δy)=>m[  x+Δx+ow+(y+Δy+h)*mw  ]|0
+		})()
 
 		var move=function(Δx,Δy){
 			var free=!ᑎ(Δx,Δy);
@@ -192,21 +209,18 @@ onload=function(){
 		}
 
 		var walk=function(v){
-			var d = sign(v);
 			move(v,0)||move(v>>1,-1)||move(v>>2,-2)
-			image=~d?playerr:playerl
+			image=~sign(v)?playerr:playerl
 		}
 
 		this.update=function(){
+			
 			var {ᐅ,ᐊ,ᐃ,ᐁ} = key
 
-			var d = ᐅ - ᐊ
-			d && walk( d*4 )
-			ᐃ && ᑎ( 0, 1 ) && !ᑎ( 0, -1 ) && ( vy = -9 )
-			loop( vy, i=>(move(0,sign(vy))||(vy=0)) )
-			vy += 1
-			vy = min(vy,20) //terminal velocity
-
+			var d = ᐅ - ᐊ; d && walk( d*4 )                 		// walking
+			ᐃ && ᑎ( 0, 1 ) && !ᑎ( 0, -1 ) && ( vy = -9 )   		// jumping
+			move(0,vy)||loop( vy, i=>(move(0,sign(vy))||(vy=0)) )	// falling
+			vy = min(vy+=1,14) 										// gravity & terminal velocity
 		}
 	}
 	var player = new Player(180,150);
@@ -223,11 +237,11 @@ onload=function(){
 				.clearRect(0,0,w*scaling,h*scaling)
 
 			var i, l = gameObjects.length;
+			
 			for(i=0;i<l;i++){
 				
 				if(gameObjects[i].update)
 					gameObjects[i].update()
-
 
 				if(gameObjects[i].draw){
 					gameObjects[i].draw()
