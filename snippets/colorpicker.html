@@ -6,6 +6,7 @@
   <div class="picker1"></div>
   <div class="picker2"></div>
 </div>
+<canvas height=1 width=3 id="bggradient"></canvas>
 
 <script src="colorpickerjs/underscore-min.js"></script>
 <script src="colorpickerjs/jquery-1.11.3.min.js"></script>
@@ -14,7 +15,8 @@
 
 <script>
   (function(){
-    var color1="#fff",color2="#fff",rgb1=[0,0,0],rgb2=[0,0,0],pow=Math.pow,round=Math.round
+    var color1="#fff",color2="#fff",rgb1=[0,0,0],rgb2=[0,0,0],pow=Math.pow,round=Math.round;
+    var ctx=$("#bggradient")[0].getContext('2d')
     $(".picker1").couleur(function(color,rgb){
       color1 = color
       rgb1   = rgb
@@ -23,7 +25,12 @@
           round(pow(pow(rgb1[0],2.2)*0.5+pow(rgb2[0],2.2)*0.5,1/2.2)*255)+","+
           round(pow(pow(rgb1[1],2.2)*0.5+pow(rgb2[1],2.2)*0.5,1/2.2)*255)+","+
           round(pow(pow(rgb1[2],2.2)*0.5+pow(rgb2[2],2.2)*0.5,1/2.2)*255)+")"
-        document.documentElement.style.backgroundImage="linear-gradient(90deg,"+color1+" 0%,"+colorCenter+" 50%,"+color2+" 100%)"
+        ctx.fillStyle = color1;
+        ctx.fillRect(0, 0, 1, 1);
+        ctx.fillStyle = colorCenter;
+        ctx.fillRect(1, 0, 1, 1);
+        ctx.fillStyle = color2;
+        ctx.fillRect(2, 0, 1, 1);
     })
     $(".picker2").couleur(function(color,rgb){
       color2 = color
@@ -33,14 +40,33 @@
           round(pow(pow(rgb1[0],2.2)*0.5+pow(rgb2[0],2.2)*0.5,1/2.2)*255)+","+
           round(pow(pow(rgb1[1],2.2)*0.5+pow(rgb2[1],2.2)*0.5,1/2.2)*255)+","+
           round(pow(pow(rgb1[2],2.2)*0.5+pow(rgb2[2],2.2)*0.5,1/2.2)*255)+")"
-        document.documentElement.style.backgroundImage="linear-gradient(90deg,"+color1+" 0%,"+colorCenter+" 50%,"+color2+" 100%)"
+        ctx.fillStyle = color1;
+        ctx.fillRect(0, 0, 1, 1);
+        ctx.fillStyle = colorCenter;
+        ctx.fillRect(1, 0, 1, 1);
+        ctx.fillStyle = color2;
+        ctx.fillRect(2, 0, 1, 1);
     })
   })()
 </script>
 
 <style>
+    #bggradient{
+      position:absolute;
+      transform:translateZ(0);
+      z-index:-1;
+      width:100%;
+      height:100%;
+    }
     html{
       background-size:cover;
+      width:100%;
+      height:100%;
+    }
+    body{
+      margin:0;
+      width:100%;
+      height:100%;
     }
     .couleur canvas{
         border-radius:50%;display:block;

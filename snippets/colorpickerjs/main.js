@@ -239,8 +239,8 @@
   
     var elements = {
       picker: $(this),
-      halo:   dom("canvas",{class:"couleur-wheel-halo",height:"50",width:"50"}),
-      wheel:  dom("canvas",{class:"couleur-wheel",height:"50",width:"50"}),
+      halo:   dom("canvas",{class:"couleur-wheel-halo",height:"20",width:"20"}),
+      wheel:  dom("canvas",{class:"couleur-wheel",height:"20",width:"20"}),
       cursor: dom("div",{class:"couleur-wheel-cursor"})
     }
 
@@ -447,8 +447,8 @@
         var c = new Color
 
         c.l=10
-        c.s=distanceFromPole([(x - 25) / (scale/8),(y - 25) / (scale/8)])
-        c.h=(dir(0,0,(x - 25) / (scale/8),(y - 25) / (scale/8))+180)%360
+        c.s=distanceFromPole([(x - 10) / (scale/20),(y - 10) / (scale/20)])
+        c.h=(dir(0,0,(x - 10) / (scale/20),(y - 10) / (scale/20))+180)%360
 
         haloCtx.fillStyle = c.hex;
         return haloCtx.fillRect(x, y, 1, 1);
@@ -459,8 +459,8 @@
         var c = new Color
 
         c.l=color.l
-        c.s=distanceFromPole([(x - 25) / (scale/8),(y - 25) / (scale/8)])
-        c.h=dir(0,0,(x - 25) / (scale/8),(y - 25) / (scale/8))
+        c.s=distanceFromPole([(x - 10) / (scale/20),(y - 10) / (scale/20)])
+        c.h=dir(0,0,(x - 10) / (scale/20),(y - 10) / (scale/20))
 
         ctx.fillStyle = c.hex;
         return ctx.fillRect(x, y, 1, 1);
@@ -468,7 +468,7 @@
 
     var redrawHaloCanvas = function() {
       
-        var pixelSize = 50;
+        var pixelSize = 20;
         for(var i=0;i<pixelSize*pixelSize;i++){
           redrawHaloSquare((i%(pixelSize)), ((i/(pixelSize))|0));
         }
@@ -483,11 +483,12 @@
       if(canvasAnimating === false){
         canvasAnimating = true
         window.requestAnimationFrame(function() {
-          var pixelSize = 50;
-          
+          var pixelSize = 20;
+          console.time("foo")
           for(var i=0;i<pixelSize*pixelSize;i++){
             redrawSquare((i%(pixelSize)), ((i/(pixelSize))|0));
           }
+          console.timeEnd("foo")
 
           elements.halo.style.opacity=min(color.l/50,1)
           canvasAnimating = false
