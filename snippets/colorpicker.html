@@ -6,7 +6,7 @@
   <div class="picker1"></div>
   <div class="picker2"></div>
 </div>
-<canvas height=1 width=3 id="bggradient"></canvas>
+<canvas height=1 width=4 id="bggradient"></canvas>
 
 <script src="colorpickerjs/underscore-min.js"></script>
 <script src="colorpickerjs/jquery-1.11.3.min.js"></script>
@@ -22,30 +22,42 @@
       rgb1   = rgb
       
         var colorCenter = "rgb("+
-          round(pow(pow(rgb1[0],2.2)*0.5+pow(rgb2[0],2.2)*0.5,1/2.2)*255)+","+
-          round(pow(pow(rgb1[1],2.2)*0.5+pow(rgb2[1],2.2)*0.5,1/2.2)*255)+","+
-          round(pow(pow(rgb1[2],2.2)*0.5+pow(rgb2[2],2.2)*0.5,1/2.2)*255)+")"
+          round(pow(pow(rgb1[0],2.2)*0.666+pow(rgb2[0],2.2)*0.333,1/2.2)*255)+","+
+          round(pow(pow(rgb1[1],2.2)*0.666+pow(rgb2[1],2.2)*0.333,1/2.2)*255)+","+
+          round(pow(pow(rgb1[2],2.2)*0.666+pow(rgb2[2],2.2)*0.333,1/2.2)*255)+")"
+        var colorCenter2 = "rgb("+
+          round(pow(pow(rgb1[0],2.2)*0.333+pow(rgb2[0],2.2)*0.666,1/2.2)*255)+","+
+          round(pow(pow(rgb1[1],2.2)*0.333+pow(rgb2[1],2.2)*0.666,1/2.2)*255)+","+
+          round(pow(pow(rgb1[2],2.2)*0.333+pow(rgb2[2],2.2)*0.666,1/2.2)*255)+")"
         ctx.fillStyle = color1;
         ctx.fillRect(0, 0, 1, 1);
         ctx.fillStyle = colorCenter;
         ctx.fillRect(1, 0, 1, 1);
-        ctx.fillStyle = color2;
+        ctx.fillStyle = colorCenter2;
         ctx.fillRect(2, 0, 1, 1);
+        ctx.fillStyle = color2;
+        ctx.fillRect(3, 0, 1, 1);
     })
     $(".picker2").couleur(function(color,rgb){
       color2 = color
       rgb2   = rgb
       
         var colorCenter = "rgb("+
-          round(pow(pow(rgb1[0],2.2)*0.5+pow(rgb2[0],2.2)*0.5,1/2.2)*255)+","+
-          round(pow(pow(rgb1[1],2.2)*0.5+pow(rgb2[1],2.2)*0.5,1/2.2)*255)+","+
-          round(pow(pow(rgb1[2],2.2)*0.5+pow(rgb2[2],2.2)*0.5,1/2.2)*255)+")"
+          round(pow(pow(rgb1[0],2.2)*0.666+pow(rgb2[0],2.2)*0.333,1/2.2)*255)+","+
+          round(pow(pow(rgb1[1],2.2)*0.666+pow(rgb2[1],2.2)*0.333,1/2.2)*255)+","+
+          round(pow(pow(rgb1[2],2.2)*0.666+pow(rgb2[2],2.2)*0.333,1/2.2)*255)+")"
+        var colorCenter2 = "rgb("+
+          round(pow(pow(rgb1[0],2.2)*0.333+pow(rgb2[0],2.2)*0.666,1/2.2)*255)+","+
+          round(pow(pow(rgb1[1],2.2)*0.333+pow(rgb2[1],2.2)*0.666,1/2.2)*255)+","+
+          round(pow(pow(rgb1[2],2.2)*0.333+pow(rgb2[2],2.2)*0.666,1/2.2)*255)+")"
         ctx.fillStyle = color1;
         ctx.fillRect(0, 0, 1, 1);
         ctx.fillStyle = colorCenter;
         ctx.fillRect(1, 0, 1, 1);
-        ctx.fillStyle = color2;
+        ctx.fillStyle = colorCenter2;
         ctx.fillRect(2, 0, 1, 1);
+        ctx.fillStyle = color2;
+        ctx.fillRect(3, 0, 1, 1);
     })
   })()
 </script>

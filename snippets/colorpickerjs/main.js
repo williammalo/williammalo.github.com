@@ -484,11 +484,10 @@
         canvasAnimating = true
         window.requestAnimationFrame(function() {
           var pixelSize = 20;
-          console.time("foo")
+          
           for(var i=0;i<pixelSize*pixelSize;i++){
             redrawSquare((i%(pixelSize)), ((i/(pixelSize))|0));
           }
-          console.timeEnd("foo")
 
           elements.halo.style.opacity=min(color.l/50,1)
           canvasAnimating = false
