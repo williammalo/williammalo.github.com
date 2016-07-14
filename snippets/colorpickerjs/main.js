@@ -240,16 +240,16 @@
     var elements = {
       picker: $(this),
       halo:   dom("canvas",{class:"couleur-wheel-halo",height:"20",width:"20"}),
-      wheel:  dom("canvas",{class:"couleur-wheel",height:"20",width:"20"}),
+      wheel:  dom("canvas",{class:"couleur-wheel",height:"220",width:"220"}),
       cursor: dom("div",{class:"couleur-wheel-cursor"})
     }
 
     elements.picker.addClass("couleur")
 
     elements.wheelWrap = 
-      dom("div",{class:"couleur-wheel-wrap"},
+      dom("div",{class:"couleur-wheels-wrap"},
         elements.halo,
-        elements.wheel,
+        dom("div",{class:"couleur-wheel-wrap"},elements.wheel),
         elements.cursor
       );
 
@@ -293,7 +293,7 @@
     var ctx = elements.wheel.getContext('2d');
     var haloCtx = elements.halo.getContext('2d');
 
-    var size = $(elements.wheel).width()|0;
+    var size = $(elements.wheelWrap).width()|0;
 
     var color = new Color
 
@@ -310,13 +310,15 @@
       var dark = color.l>50;
       if(dark!==pickerDark){
         pickerDark = dark
-        $(elements.cursor).css("color",dark?"#000":"inherit")
+        elements.cursor.style.color = dark?"#000":"inherit"
       }
     }
 
 
     var slidersUpdate = function(){
-      $(elements.cursor).css("transform","translate3d("+(cursorX*(size/2)+size/2)+"px,"+(cursorY*(size/2)+size/2)+"px,0)")
+      size = $(elements.wheelWrap).width()|0;
+      elements.cursor.style.transform = "translate3d("+(cursorX*(size/2)+size/2)+"px,"+(cursorY*(size/2)+size/2)+"px,0)"
+      console.log(size)
 
       pickerContrast()
 
@@ -427,14 +429,16 @@
     $(window).on("mousedown",function(){mousePressed = true })
     $(window).on("mouseup",  function(){mousePressed = false})
 
-    $(elements.wheel).on("mousemove",function(e) {
+    $(elements.wheelWrap).on("mousemove",function(e) {
       if(mousePressed){
+        size = $(elements.wheelWrap).width()|0;
         cursorX = (e.pageX-$(this).offset().left-size/2)/(size/2)
         cursorY = (e.pageY-$(this).offset().top -size/2)/(size/2)
         pickerUpdate()
       }
     })
-    $(elements.wheel).on("mousedown",function(e){
+    $(elements.wheelWrap).on("mousedown",function(e){
+      size = $(elements.wheelWrap).width()|0;
       cursorX = (e.pageX-$(this).offset().left-size/2)/(size/2)
       cursorY = (e.pageY-$(this).offset().top -size/2)/(size/2)
       pickerUpdate()
@@ -454,17 +458,34 @@
         return haloCtx.fillRect(x, y, 1, 1);
     };
 
-    var redrawSquare = function(x, y) {
+    var redrawSquare = function(x, y, offsetX, offsetY,l,scale) {
 
         var c = new Color
 
-        c.l=color.l
+        c.l=l
         c.s=distanceFromPole([(x - 10) / (scale/20),(y - 10) / (scale/20)])
         c.h=dir(0,0,(x - 10) / (scale/20),(y - 10) / (scale/20))
 
         ctx.fillStyle = c.hex;
-        return ctx.fillRect(x, y, 1, 1);
+        return ctx.fillRect(offsetX+x, offsetY+y, 1, 1);
     };
+
+    (function(){
+      var pixelSize = 22;
+      var i,l,scale;
+      for(l=0;l<100;l++){
+        scale=getScale(l)
+        for(i=0;i<pixelSize*pixelSize;i++){
+          redrawSquare((i%(pixelSize))-1, ((i/pixelSize)|0)-1 ,  (l%10) *22 +1      ,    ((l/10)|0)*22 +1   ,l  ,scale  );
+        }
+      }
+      /*
+      var dataurl=elements.wheel.toDataURL()
+      var img = document.createElement("img")
+      img.src=dataurl
+      document.body.appendChild(img)
+      */
+    })();
 
     var redrawHaloCanvas = function() {
       
@@ -477,22 +498,12 @@
 
     redrawHaloCanvas()
 
-    var canvasAnimating = false
-
     var redrawCanvas = function() {
-      if(canvasAnimating === false){
-        canvasAnimating = true
-        window.requestAnimationFrame(function() {
-          var pixelSize = 20;
-          
-          for(var i=0;i<pixelSize*pixelSize;i++){
-            redrawSquare((i%(pixelSize)), ((i/(pixelSize))|0));
-          }
+      
+      elements.wheel.style.transform = "translate3d("+(-((color.l|0)%10)*10-.4545)+"%,"+(-(((color.l|0)/10)|0)*10-.4545)*(1100/1300)+"%,0)"
 
-          elements.halo.style.opacity=min(color.l/50,1)
-          canvasAnimating = false
-        })
-      }
+      elements.halo.style.opacity=min(color.l/50,1)
+          
     };
 
 
@@ -500,7 +511,7 @@
 
     pickerUpdate()
     window.requestAnimationFrame(function(){
-      size = $(elements.wheel).width()|0;
+      size = $(elements.wheelWrap).width()|0;
       pickerUpdate()
     })
 
