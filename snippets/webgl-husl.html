@@ -327,9 +327,9 @@ vec4 lch_to_rgb(vec4 color) {
 
 
 
-vec3 dithering( vec2 pixelPosition ){
+vec4 dithering( vec2 pixelPosition ){
   vec3 vDither = vec3( dot( vec2( 171.0, 231.0 ), pixelPosition.xy  ) );
-  return fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0;
+  return vec4(fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0,1.0);
 }
 
 
@@ -337,8 +337,7 @@ vec3 dithering( vec2 pixelPosition ){
 
 
 void main() {
-  vec3 gradient = mix( pow(color1,vec3(2.2)), pow(color2,vec3(2.2)), position.x );
-  vec3 outcol = gradient + dithering( pixelPosition );
+
 
 
   float lightness = color1.r*255.0;
@@ -348,8 +347,7 @@ void main() {
   //float chroma = position.y*maxChromaForL(lightness);
 
 
-  gl_FragColor = pow(vec4( outcol, 1.0 ),vec4(1.0/2.2));
-  gl_FragColor = lch_to_rgb(vec4(lightness,chroma,hue,1.0));
+  gl_FragColor = lch_to_rgb(vec4(lightness,chroma,hue,1.0))+dithering(pixelPosition);
   //gl_FragColor = texture2D(huslLookupTable, vec2(position.x,1.0-position.y));
 
 }
