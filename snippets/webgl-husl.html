@@ -90,6 +90,39 @@ uniform sampler2D u_image;
 
 
 
+float maxChromaForLH( float L, float H ){
+  return texture2D(u_image, vec2(H/512.0,L/512.0)).r*255.0;
+}
+
+float fromLinear(float c) {
+    float newC=0.0;
+    if (c <= 0.0031308) {
+      newC=12.92 * c;
+    } else {
+      newC=1.055 * pow(c, 1.0 / 2.4) - 0.055;
+    }
+    return newC;
+}
+
+float toLinear(float c) {
+    float a = 0.055;
+    float newC=0.0;
+    if (c > 0.04045) {
+        newC=pow((c + a) / (1.0 + a), 2.4);
+    } else {
+        newC=c / 12.92;
+    }
+    return newC;
+}
+
+
+vec4 xyz_to_rgb(vec4 tuple) {
+    float R = fromLinear(dot(vec3(3.2409699419045214, -1.5373831775700935, -0.49861076029300328), tuple.rgb));
+    float G = fromLinear(dot(vec3(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613), tuple.rgb));
+    float B = fromLinear(dot(vec3(0.055630079696993609, -0.20397695888897657, 1.0569715142428786), tuple.rgb));
+    return vec4(R, G, B, tuple.a);
+}
+
 
 
 
@@ -137,24 +170,6 @@ vec4 luv_to_xyz(vec4 tuple) {
 
 
 
-
-
-float fromLinear(float c) {
-    float newC=0.0;
-    if (c <= 0.0031308) {
-      newC=12.92 * c;
-    } else {
-      newC=1.055 * pow(c, 1.0 / 2.4) - 0.055;
-    }
-    return newC;
-}
-
-vec4 xyz_to_rgb(vec4 tuple) {
-    float R = fromLinear(dot(vec3(3.2409699419045214, -1.5373831775700935, -0.49861076029300328), tuple.rgb));
-    float G = fromLinear(dot(vec3(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613), tuple.rgb));
-    float B = fromLinear(dot(vec3(0.055630079696993609, -0.20397695888897657, 1.0569715142428786), tuple.rgb));
-    return vec4(R, G, B, tuple.a);
-}
 
 
 
@@ -205,60 +220,7 @@ vec3 dithering( vec2 pixelPosition ){
   vec3 vDither = vec3( dot( vec2( 171.0, 231.0 ), pixelPosition.xy  ) );
   return fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0;
 }
-/*
-99-45
-98-106
-97-194
-96-194
-95-195
-94-197
-93-201
-92-205
-91-211
-90-218
-89-227
-88-236
-87-238
-86-237
-85-234
-84-232
-83-230
-82-227
-81-225
-80-223
-79-220
-78-218
-77-216
-76-213
-75-210
-74-209
-73-206
-72-204
-71-201
-70-199
-69-197
-68-194
-67-192
-66-194
-65-199
-64-207
-63-213
-62-219
-61-225
-60-230
-59-230
-58-230
-57-231
-56-231
-55-233
-54-233
-53-234
-52-235
-51-235
-50-236
-49-238
-48-239
-*/
+
 
 float huslMaxChroma( float L, float H ){
   
