@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>WebGL HUSL</title>
+
+<style>[hidden]{display:none;}</style>
+
+<h1>WebGL HUSL port alpha 1:</h1>
+
+<div>
+  <label for="c1r">lightness slider:</label>
+  <input type="range" min=0 max=100 step=1 id="c1r" value=50>
+  <input type="range" min=0 max=255 step=1 id="c1g" value=127 hidden>
+  <input type="range" min=0 max=255 step=1 id="c1b" value=0 hidden>
+</div>
+
+<div hidden>
+  <input type="range" min=0 max=255 step=1 id="c2r" value=0>
+  <input type="range" min=0 max=255 step=1 id="c2g" value=127>
+  <input type="range" min=0 max=255 step=1 id="c2b" value=255>
+</div>
+
+<div hidden>
+  <label for="w">width:</label><input type="text" id="w" value=1500>
+  <label for="h">height:</label><input type="text" id="h" value=300>
+</div>
+
+<div>
+  <button id="makeimg">generate image</button>
+</div>
+<h1>Preview:</h1>
+<canvas id="canvas" width="300" height="300"></canvas>
+<h1>Downloadable image:</h1>
+<img src="" alt="" id="img" download="gradient.png">
+
+
+
+
+<script id="2d-vertex-shader" type="x-shader/x-vertex">
+
+attribute vec2 a_position;
+uniform vec2 u_resolution;
+
+uniform vec3 u_color1;
+uniform vec3 u_color2;
+
+varying vec2 position;
+varying vec2 pixelPosition;
+
+varying vec3 color1;
+varying vec3 color2;
+
+void main() {
+
+  position = (a_position+1.0)*0.5;
+  pixelPosition = position*u_resolution;
+
+  color1=u_color1;
+  color2=u_color2;
+
+
+  gl_Position = vec4(a_position,0,1);
+}
+</script>
+
+<script id="2d-fragment-shader" type="x-shader/x-fragment">
+precision highp float;
+
+varying vec2 position;
+varying vec2 pixelPosition;
+
+varying vec3 color1;
+varying vec3 color2;
+
+uniform sampler2D u_image;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vec4 rgb_to_xyz(vec4 color) {
+        float var_R = (color.r); //R from 0.0 to 255.0
+        float var_G = (color.g); //G from 0.0 to 255.0
+        float var_B = (color.b); //B from 0.0 to 255.0
+ 
+        if (var_R > 0.04045) {
+            var_R = pow(((var_R + 0.055) / 1.055), 2.4);
+        } else {
+            var_R = var_R / 12.92;
+        }
+        if (var_G > 0.04045) {
+            var_G = pow(((var_G + 0.055) / 1.055), 2.4);
+        } else {
+            var_G = var_G / 12.92;
+        }
+ 
+        if (var_B > 0.04045) {
+            var_B = pow(((var_B + 0.055) / 1.055), 2.4);
+        } else {
+            var_B = var_B / 12.92;
+        }
+ 
+        var_R = var_R * 100.0;
+        var_G = var_G * 100.0;
+        var_B = var_B * 100.0;
+ 
+        //Observer. = 2.0°, Illuminant = D65
+        float X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805;
+        float Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722;
+        float Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505;
+ 
+        return vec4(X, Y, Z, color.a);
+    }
+ 
+    vec4 xyz_to_lab(vec4 color) {
+ 
+        float ref_X = 95.047; //Observer= 2.0°, Illuminant= D65
+        float ref_Y = 100.000;
+        float ref_Z = 108.883;
+ 
+        float var_X = color.r / ref_X;
+        float var_Y = color.g / ref_Y;
+        float var_Z = color.b / ref_Z;
+ 
+        if (var_X > 0.008856) {
+            var_X = pow(var_X, (1.0 / 3.0));
+        } else {
+            var_X = (7.787 * var_X) + (16.0 / 116.0);
+        }
+        if (var_Y > 0.008856) {
+            var_Y = pow(var_Y, (1.0 / 3.0));
+        } else {
+            var_Y = (7.787 * var_Y) + (16.0 / 116.0);
+        }
+        if (var_Z > 0.008856) {
+            var_Z = pow(var_Z, (1.0 / 3.0));
+        } else {
+            var_Z = (7.787 * var_Z) + (16.0 / 116.0);
+        }
+ 
+        float L = (116.0 * var_Y) - 16.0;
+        float a = 500.0 * (var_X - var_Y);
+        float b = 200.0 * (var_Y - var_Z);
+ 
+        return vec4(L, a, b, color.a);
+    }
+ 
+    vec4 lab_to_lch(vec4 color) {
+ 
+        const float MPI = 3.14159265359;
+ 
+        float var_H = atan(color.b, color.g); //in GLSL this is atan2
+ 
+        if (var_H > 0.0) {
+            var_H = (var_H / MPI) * 180.0;
+        } else {
+            var_H = 360.0 - (abs(var_H) / MPI) * 180.0;
+        }
+ 
+        float C = sqrt(pow(color.g, 2.0) + pow(color.b, 2.0));
+        float H = var_H;
+ 
+        return vec4(color.r, C, H, color.a);
+    }
+    // ---------------------------
+
+
+
+
+
+
+    vec4 lch_to_lab(vec4 color) {
+        float a = cos(radians(color.b)) * color.g;
+        float b = sin(radians(color.b)) * color.g;
+ 
+        return vec4(color.r, a, b, color.a);
+    }
+
+ /*
+    vec4 lab_to_xyz(vec4 color) {
+        float var_Y = (color.r + 16.0) / 116.0;
+        float var_X = color.g / 500.0 + var_Y;
+        float var_Z = var_Y - color.b / 200.0;
+ 
+        if (pow(var_Y, 3.0) > 0.008856) {
+            var_Y = pow(var_Y, 3.0);
+        } else {
+            var_Y = (var_Y - 16.0 / 116.0) / 7.787;
+        }
+        if (pow(var_X, 3.0) > 0.008856) {
+            var_X = pow(var_X, 3.0);
+        } else {
+            var_X = (var_X - 16.0 / 116.0) / 7.787;
+        }
+        if (pow(var_Z, 3.0) > 0.008856) {
+            var_Z = pow(var_Z, 3.0);
+        } else {
+            var_Z = (var_Z - 16.0 / 116.0) / 7.787;
+        }
+ 
+        float ref_X = 95.047; //Observer= 2.0 degrees, Illuminant= D65
+        float ref_Y = 100.000;
+        float ref_Z = 108.883;
+ 
+        float X = ref_X * var_X;
+        float Y = ref_Y * var_Y;
+        float Z = ref_Z * var_Z;
+ 
+        return vec4(X, Y, Z, color.a);
+    }
+*/
+
+  float L_to_Y(float L) {
+    float Y=0.0;
+    if (L <= 8.0) {
+      Y= L / 903.2962962962963;
+    } else {
+      Y= pow((L + 16.0) / 116.0, 3.0);
+    }
+    return Y;
+  }
+
+  vec4 lab_to_xyz(vec4 tuple) {
+
+    float L = tuple.r;
+    float U = tuple.g;
+    float V = tuple.b;
+
+    //if (L === 0) {
+    //  return [0, 0, 0];
+    //}
+    float varU = U / (13.0 * L) + 0.19783000664283681;
+    float varV = V / (13.0 * L) + 0.468319994938791;
+    float Y = L_to_Y(L);
+    float X = 0.0 - (9.0 * Y * varU) / ((varU - 4.0) * varV - varU * varV);
+    float Z = (9.0 * Y - (15.0 * varV * Y) - (varV * X)) / (3.0 * varV);
+    return vec4(X, Y, Z,tuple.a);
+  }
+
+
+ 
+  /*  vec4 xyz_to_rgb(vec4 color) {
+        float var_X = color.r / 100.0; //X from 0.0 to  95.047      (Observer = 2.0 degrees, Illuminant = D65);
+        float var_Y = color.g / 100.0; //Y from 0.0 to 100.000;
+        float var_Z = color.b / 100.0; //Z from 0.0 to 108.883;
+ 
+        float var_R = var_X * 3.2406 + var_Y * -1.5372 + var_Z * -0.4986;
+        float var_G = var_X * -0.9689 + var_Y * 1.8758 + var_Z * 0.0415;
+        float var_B = var_X * 0.0557 + var_Y * -0.2040 + var_Z * 1.0570;
+ 
+        if (var_R > 0.0031308) {
+            var_R = 1.055 * pow(var_R, (1.0 / 2.4)) - 0.055;
+        } else {
+            var_R = 12.92 * var_R;
+        }
+        if (var_G > 0.0031308) {
+            var_G = 1.055 * pow(var_G, (1.0 / 2.4)) - 0.055;
+        } else {
+            var_G = 12.92 * var_G;
+        }
+        if (var_B > 0.0031308) {
+            var_B = 1.055 * pow(var_B, (1.0 / 2.4)) - 0.055;
+        } else {
+            var_B = 12.92 * var_B;
+        }
+ 
+        float R = var_R;
+        float G = var_G;
+        float B = var_B;
+ 
+        return vec4(R, G, B, color.a);
+    }*/
+
+
+  float fromLinear(float c) {
+    float newC=0.0;
+    if (c <= 0.0031308) {
+      newC=12.92 * c;
+    } else {
+      newC=1.055 * pow(c, 1.0 / 2.4) - 0.055;
+    }
+    return newC;
+  }
+
+  vec4 xyz_to_rgb(vec4 tuple) {
+    float R = fromLinear(dot(vec3(3.2409699419045214, -1.5373831775700935, -0.49861076029300328), tuple.rgb));
+    float G = fromLinear(dot(vec3(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613), tuple.rgb));
+    float B = fromLinear(dot(vec3(0.055630079696993609, -0.20397695888897657, 1.0569715142428786), tuple.rgb));
+    return vec4(R, G, B, tuple.a);
+  }
+ 
+ 
+    vec4 rgb_to_lch(vec4 color) {
+        vec4 xyz = rgb_to_xyz(color);
+        vec4 lab = xyz_to_lab(xyz);
+        vec4 lch = lab_to_lch(lab);
+        return lch;
+    }
+ 
+ 
+    vec4 lch_to_rgb(vec4 color) {
+        vec4 lab = lch_to_lab(color);
+        vec4 xyz = lab_to_xyz(lab);
+        vec4 rgb = xyz_to_rgb(xyz);
+/*
+        if(rgb.r>1.0||rgb.g>1.0||rgb.b>1.0||rgb.r<0.0||rgb.g<0.0||rgb.b<0.0){
+          rgb.a=0.0;
+        }
+*/
+        return rgb;
+    }
+ 
+    vec4 rgb_to_lab(vec4 color) {
+        vec4 xyz = rgb_to_xyz(color);
+        vec4 lab = xyz_to_lab(xyz);
+        return lab;
+    }
+ 
+    vec4 lab_to_rgb(vec4 color) {
+        vec4 xyz = lab_to_xyz(color);
+        vec4 rgb = xyz_to_rgb(xyz);
+        return rgb;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vec3 dithering( vec2 pixelPosition ){
+  vec3 vDither = vec3( dot( vec2( 171.0, 231.0 ), pixelPosition.xy  ) );
+  return fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0;
+}
+/*
+99-45
+98-106
+97-194
+96-194
+95-195
+94-197
+93-201
+92-205
+91-211
+90-218
+89-227
+88-236
+87-238
+86-237
+85-234
+84-232
+83-230
+82-227
+81-225
+80-223
+79-220
+78-218
+77-216
+76-213
+75-210
+74-209
+73-206
+72-204
+71-201
+70-199
+69-197
+68-194
+67-192
+66-194
+65-199
+64-207
+63-213
+62-219
+61-225
+60-230
+59-230
+58-230
+57-231
+56-231
+55-233
+54-233
+53-234
+52-235
+51-235
+50-236
+49-238
+48-239
+*/
+
+float huslMaxChroma( float L, float H ){
+  
+  return texture2D(u_image, vec2(H/512.0,L/512.0)).r*255.0;
+}
+
+
+void main() {
+  vec3 gradient = mix( pow(color1,vec3(2.2)), pow(color2,vec3(2.2)), position.x );
+  vec3 outcol = gradient + dithering( pixelPosition );
+
+
+  float lightness = color1.r*255.0;
+  float hue = position.x*360.0;
+  float chroma = position.y*huslMaxChroma(lightness,hue);
+
+
+  gl_FragColor = pow(vec4( outcol, 1.0 ),vec4(1.0/2.2));
+  gl_FragColor = lch_to_rgb(vec4(lightness,chroma,hue,1.0));
+  //gl_FragColor = texture2D(u_image, vec2(position.x,1.0-position.y));
+
+}
+</script>
+
+
+<script>
+"use strict";
+
+
+var huslMaxChromaImage=document.createElement("img")
+
+huslMaxChromaImage.src="data:image/png;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIj8H/jgAv5es54aAAAAAElFTkSuQmCC"
+
+function createShaderFromScript(gl, scriptId) {
+  var shaderType;
+  var shaderScript = document.getElementById(scriptId);
+
+  var shaderSource = shaderScript.text;
+
+
+  if (shaderScript.type === "x-shader/x-vertex") {
+    shaderType = gl.VERTEX_SHADER;
+  } else if (shaderScript.type === "x-shader/x-fragment") {
+    shaderType = gl.FRAGMENT_SHADER;
+  }
+
+  var shader = gl.createShader(shaderType);
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
+
+  return shader;
+}
+
+
+function createProgramFromScripts(gl, vertexShader, fragmentShader) {
+
+
+  var program = gl.createProgram();
+
+  gl.attachShader(program, createShaderFromScript(gl, vertexShader  ) );
+  gl.attachShader(program, createShaderFromScript(gl, fragmentShader) );
+
+  gl.linkProgram(program);
+
+  return program;
+};
+
+
+huslMaxChromaImage.onload=function(){
+
+
+  var canvas = document.getElementById("canvas");
+
+  var gl = canvas.getContext("webgl",{preserveDrawingBuffer: true});
+
+
+  var program = createProgramFromScripts(gl, "2d-vertex-shader", "2d-fragment-shader" );
+  gl.useProgram(program);
+
+  // position
+  var positionLocation = gl.getAttribLocation(program, "a_position");
+
+  // resolution
+  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
+  // color1
+  var c1Location = gl.getUniformLocation(program, "u_color1");
+  gl.uniform3f(c1Location , 0.5, 0.5,0.5);
+
+  // color2
+  var c2Location = gl.getUniformLocation(program, "u_color2");
+  gl.uniform3f(c2Location, 0.5, 0.5,0.5);
+
+
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1.0, -1.0,
+         1.0, -1.0,
+        -1.0,  1.0,
+        -1.0,  1.0,
+         1.0, -1.0,
+         1.0,  1.0]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+
+
+
+
+
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+ 
+  // Set the parameters so we can render any size image.
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+ 
+  // Upload the image into the texture.
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, huslMaxChromaImage);
+
+
+
+
+
+
+
+
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  var update=function(){
+    gl.uniform3f(c1Location , 
+      document.getElementById("c1r").value/255,
+      document.getElementById("c1g").value/255,
+      document.getElementById("c1b").value/255);
+    gl.uniform3f(c2Location , 
+      document.getElementById("c2r").value/255,
+      document.getElementById("c2g").value/255,
+      document.getElementById("c2b").value/255);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+
+  document.getElementById("c1r").oninput=update
+  document.getElementById("c1g").oninput=update
+  document.getElementById("c1b").oninput=update
+
+  document.getElementById("c2r").oninput=update
+  document.getElementById("c2g").oninput=update
+  document.getElementById("c2b").oninput=update
+
+  update();
+
+  document.getElementById("makeimg").onclick=function(){
+    console.time("createImage")
+    document.getElementById("img").src=canvas.toDataURL()
+    console.timeEnd("createImage")
+  }
+
+}
+
+
+
+
+
+
+
+</script>
+
