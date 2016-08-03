@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>WebGL gradient generator</title>
+
+
+
+
+<div>
+  <input type="range" min=0 max=255 step=1 id="c1r" value=255>
+  <input type="range" min=0 max=255 step=1 id="c1g" value=127>
+  <input type="range" min=0 max=255 step=1 id="c1b" value=0>
+</div>
+
+<div>
+  <input type="range" min=0 max=255 step=1 id="c2r" value=0>
+  <input type="range" min=0 max=255 step=1 id="c2g" value=127>
+  <input type="range" min=0 max=255 step=1 id="c2b" value=255>
+</div>
+
+<div>
+  <label for="w">width:</label><input type="text" id="w" value=1500>
+  <label for="h">height:</label><input type="text" id="h" value=300>
+</div>
+
+<div>
+  <button id="makeimg">generate image</button>
+</div>
+<h1>Preview:</h1>
+<canvas id="canvas" width="300" height="300"></canvas>
+<h1>Downloadable image:</h1>
+<img src="" alt="" id="img" download="gradient.png">
+
+
+
+
+<script id="2d-vertex-shader" type="x-shader/x-vertex">
+
+attribute vec2 a_position;
+uniform vec2 u_resolution;
+
+uniform vec3 u_color1;
+uniform vec3 u_color2;
+
+varying vec2 position;
+varying vec2 pixelPosition;
+
+varying vec3 color1;
+varying vec3 color2;
+
+void main() {
+
+  position = (a_position+1.0)*0.5;
+  pixelPosition = position*u_resolution;
+
+  color1=u_color1;
+  color2=u_color2;
+
+
+  gl_Position = vec4(a_position,0,1);
+}
+</script>
+
+<script id="2d-fragment-shader" type="x-shader/x-fragment">
+precision highp float;
+
+varying vec2 position;
+varying vec2 pixelPosition;
+
+varying vec3 color1;
+varying vec3 color2;
+
+
+
+
+
+
+
+
+
+vec3 dithering( vec2 pixelPosition ){
+  vec3 vDither = vec3( dot( vec2( 171.0, 231.0 ), pixelPosition.xy  ) );
+  return fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0;
+}
+
+
+
+void main() {
+  vec3 gradient = mix( pow(color1,vec3(2.2)), pow(color2,vec3(2.2)), position.x );
+  vec3 outcol = gradient + dithering( pixelPosition );
+  gl_FragColor = pow(vec4( outcol, 1.0 ),vec4(1.0/2.2));
+}
+</script>
+
+<script>
+"use strict";
+
+
+
+function createShaderFromScript(gl, scriptId) {
+  var shaderType;
+  var shaderScript = document.getElementById(scriptId);
+
+  var shaderSource = shaderScript.text;
+
+
+  if (shaderScript.type === "x-shader/x-vertex") {
+    shaderType = gl.VERTEX_SHADER;
+  } else if (shaderScript.type === "x-shader/x-fragment") {
+    shaderType = gl.FRAGMENT_SHADER;
+  }
+
+  var shader = gl.createShader(shaderType);
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
+
+  return shader;
+}
+
+
+function createProgramFromScripts(gl, vertexShader, fragmentShader) {
+
+
+  var program = gl.createProgram();
+
+  gl.attachShader(program, createShaderFromScript(gl, vertexShader  ) );
+  gl.attachShader(program, createShaderFromScript(gl, fragmentShader) );
+
+  gl.linkProgram(program);
+
+  return program;
+};
+
+
+
+
+
+  var canvas = document.getElementById("canvas");
+
+  var gl = canvas.getContext("webgl",{preserveDrawingBuffer: true});
+
+
+  var program = createProgramFromScripts(gl, "2d-vertex-shader", "2d-fragment-shader" );
+  gl.useProgram(program);
+
+  // position
+  var positionLocation = gl.getAttribLocation(program, "a_position");
+
+  // resolution
+  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
+  // color1
+  var c1Location = gl.getUniformLocation(program, "u_color1");
+  gl.uniform3f(c1Location , 1, 0.5,0);
+
+  // color2
+  var c2Location = gl.getUniformLocation(program, "u_color2");
+  gl.uniform3f(c2Location, 0, 0.5,1);
+
+
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1.0, -1.0,
+         1.0, -1.0,
+        -1.0,  1.0,
+        -1.0,  1.0,
+         1.0, -1.0,
+         1.0,  1.0]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+
+
+
+  var update=function(){
+    gl.uniform3f(c1Location , 
+      document.getElementById("c1r").value/255,
+      document.getElementById("c1g").value/255,
+      document.getElementById("c1b").value/255);
+    gl.uniform3f(c2Location , 
+      document.getElementById("c2r").value/255,
+      document.getElementById("c2g").value/255,
+      document.getElementById("c2b").value/255);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+  var updateSize=function(){
+    var w=Number(document.getElementById("w").value)
+    var h=Number(document.getElementById("h").value)
+    canvas.width=w
+    canvas.height=h
+    gl.viewport(0, 0, w, h);
+    gl.uniform2f(resolutionLocation, w, h);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+  document.getElementById("w").oninput=updateSize
+  document.getElementById("h").oninput=updateSize
+
+  document.getElementById("c1r").oninput=update
+  document.getElementById("c1g").oninput=update
+  document.getElementById("c1b").oninput=update
+
+  document.getElementById("c2r").oninput=update
+  document.getElementById("c2g").oninput=update
+  document.getElementById("c2b").oninput=update
+
+
+  document.getElementById("makeimg").onclick=function(){
+    console.time("createImage")
+    document.getElementById("img").src=canvas.toDataURL()
+    console.timeEnd("createImage")
+  }
+
+
+
+</script>
+
