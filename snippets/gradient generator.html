@@ -69,14 +69,6 @@ varying vec2 pixelPosition;
 varying vec3 color1;
 varying vec3 color2;
 
-
-
-
-
-
-
-
-
 vec3 dithering( vec2 pixelPosition ){
   vec3 vDither = vec3( dot( vec2( 171.0, 231.0 ), pixelPosition.xy  ) );
   return fract( vDither.rgb / vec3( 103.0, 71.0, 97.0 ) ) / 255.0;
