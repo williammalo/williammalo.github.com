@@ -64,7 +64,7 @@ void main() {
   color2=u_color2;
 
   animationProgress=color1.x;
-  smoothness=max(animationProgress*30.0,2.0);
+  smoothness=max((.5-abs(.5-animationProgress))*30.0+animationProgress*10.0,2.0);
 
 
   gl_Position = vec4(a_position,0,1);
@@ -164,12 +164,12 @@ void main() {
 
         objects[i]=circle(
             darker,
-            center+lengthDir( animationProgress*80.0, float(i)*(tau/8.0) ),
+            center+lengthDir( animationProgress*60.0, float(i)*(tau/8.0) ),
             16.
         );
         objects[i+8]=circle(
             lighter,
-            center+lengthDir( animationProgress*80.0, float(i)*(tau/8.0) ),
+            center+lengthDir( animationProgress*60.0, float(i)*(tau/8.0) ),
             12.
         );
     }
