@@ -28,7 +28,7 @@
   <button id="makeimg">generate image</button>
 </div>
 <h1>Preview:</h1>
-<canvas id="canvas" width="400" height="400" style="width:200px;height:200px;transform:translateZ(0)"></canvas>
+<canvas id="canvas" width="50" height="50" style="width:200px;height:200px;transform:translateZ(0)"></canvas>
 <h1>Downloadable image:</h1>
 <img src="" alt="" id="img" download="gradient.png">
 
@@ -405,8 +405,6 @@ vec4 lightAjust (vec4 color,float amount){
 
 vec4 toneMap (vec4 color){
 
-    color=clamp(color,0.0,1.0);
-
     float maxColor=max(color.r,max(color.g,color.b));
     vec4 foo=lightAjust(color/maxColor,maxColor);
 
@@ -424,9 +422,14 @@ vec4 dithering( vec2 pixelPosition ){
 
 
 vec4 realColors(vec4 color){
-   /* if(color.r>1.0||color.g>1.0||color.b>1.0||color.r<0.0||color.g<0.0||color.b<0.0){
-        color.rgb=vec3(1.0);
-    }*/
+    //if(color.r>1.0||color.g>1.0||color.b>1.0||color.r<0.0||color.g<0.0||color.b<0.0){
+    //    color.rgb=vec3(1.0);
+    //}
+    vec4 lch=rgbToLch(color);
+    float maxc=husl_maxChromaForLH(lch.x,lch.z);
+    if(lch.y>maxc){
+        color=lchToRgb(lch.x,maxc,lch.z,color.a);
+    }
     return color;
 }
 
@@ -455,34 +458,50 @@ vec4 getColor(vec2 position){
     
 
     //return pow(realColors(xyzToRgb(X,Y,Z,1.0)),vec4(2.2));
+    if(
+        true//distance(position,vec2(0.5,0.5))<0.5&&distance(position,vec2(0.5,0.5))>0.48
+    ){
+        
+        //luv wheel
+        vec4 ret1 = pow(realColors(luvToRgb(
+            mix(75.0,95.0,position.y)-position.x*15.0 
+            ,U/2.1,V/2.1,1.0)),vec4(2.2));
 
+
+        //husl_maxChromaForLH
+
+        //hsl wheel
+        vec4 ret2 = vec4(1.0);
+
+        ret2.rgb = pow( 
+            clamp(
+                0.5 + cos(  atan(position.y-0.5,position.x-0.5) + vec3(-.0833,.5833,0.25)*6.28318       ) ,
+            0.0,1.0)
+        ,vec3(2.2));
+
+        ret2.rgb=mix(vec3(0.5),ret2.rgb,distance(position,vec2(0.5,0.5))*2.0);
+
+
+        //husl wheel
+        /*
+        ret1 = pow(huslToRgb( 
+            degrees(atan(position.y-0.5,position.x-0.5)),
+            distance(position,vec2(0.5,0.5))*200.0,
+            mix(35.0,95.0,position.y)-position.x*10.0       ,1.0),vec4(2.2));
+        */
+
+
+        return mix(ret1,ret2,0.0);
+    }
     //return pow(realColors(luvToRgb(L,U,V,1.0)),vec4(2.2));
-   
-    
-    vec4 ret = vec4(vec3(0.03),1.0);
-
-
-    float ll=position.x*100.0;
-    float cc=position.y*180.0;
-    float hh=color1.r;
-
-    vec4 ccolor = pow(realColors(lchToRgb(
-        ll,
-        min( cc ,husl_maxChromaForLH(ll,hh) ),
-        hh,
-    1.0)),vec4(2.2));
-
-    ret=mix(ccolor,ret,   clamp((cc-husl_maxChromaForLH(ll,hh))+1.0,0.0,1.0)    );
-    
-    return ret;
-    //return vec4(vec3(0.03),1.0);
+    //return vec4(vec3(1.0,1.0,0.0),1.0);
+    return vec4(vec3(0.03),1.0);
 }
 
 
 void main() {
 
     //Rotated grid supersampling
-    /*
     gl_FragColor = pow((
     getColor(position+(onePixel*vec2( -0.25,-0.25 )))+
     getColor(position+(onePixel*vec2( -0.75,-0.75 )))+
@@ -493,9 +512,7 @@ void main() {
     getColor(position+(onePixel*vec2(  0.75,-0.25 )))+
     getColor(position+(onePixel*vec2( -0.75, 0.25 ))))*0.125,vec4(1.0/2.2))
 
-    +dithering(pixelPosition);*/
-
-    gl_FragColor = pow(getColor(position),vec4(1.0/2.2))+dithering(pixelPosition);
+    +dithering(pixelPosition);
 }
 </script>
 
@@ -636,14 +653,7 @@ huslMaxChromaImage.onload=function(){
     document.getElementById("img").src=canvas.toDataURL()
     console.timeEnd("createImage")
   }
-  /*
-  var foobar=0
-  setInterval(function(){
-    foobar+=1
-    document.getElementById("c1r").value=foobar%360
-    update()
-  },16)
-*/
+
 
 }
 
