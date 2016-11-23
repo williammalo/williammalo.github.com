@@ -43,13 +43,11 @@ attribute vec2 a_position;
 uniform vec2 u_resolution;
 
 uniform vec3 u_color1;
-uniform vec3 u_color2;
 
 varying vec2 position;
 varying vec2 pixelPosition;
 
 varying vec3 color1;
-varying vec3 color2;
 
 varying float animationProgress;
 varying float smoothness;
@@ -61,7 +59,6 @@ void main() {
   pixelPosition = position*u_resolution;
 
   color1=u_color1;
-  color2=u_color2;
 
   animationProgress=color1.x;
   smoothness=max((.5-abs(.5-animationProgress))*30.0+animationProgress*10.0,2.0);
@@ -80,7 +77,6 @@ varying vec2 position;
 varying vec2 pixelPosition;
 
 varying vec3 color1;
-varying vec3 color2;
 
 varying float animationProgress;
 varying float smoothness;
@@ -91,49 +87,60 @@ uniform vec3 currentColor;
 
 float tau=6.28318;
 
+
 vec4 circle(vec3 color,vec2 p,float r) {
     p=p-pixelPosition;
-    return vec4(color,pow(max(1.-(
-        max(length(p) - r,0.)
-    )/smoothness,.0001),2.));
+    return vec4(color,
+        //easing function
+            //prevent values lower than 0 (negative alpha can't exist)
+                //reverse distance function and set width of blur
+                    //actual distance function
+        pow(
+            max(
+                1.-(
+                    max(length(p) - r,0.)
+                )/smoothness
+            ,0.0)
+        ,2.)
+    );
 }
 
 vec4 box( vec3 color,vec2 p, vec2 b ) {
     p=p-pixelPosition;
     return vec4(color,pow(max(1.-(
         length(max(abs(p)-b,0.))
-    )/smoothness,.0001),2.));
+    )/smoothness,0.0),2.));
 }
 
 vec4 roundBox(vec3 color, vec2 p, vec2 b, float r ) {
     p=p-pixelPosition;
     return vec4(color,pow(max(1.-(
         length(max(abs(p)-(b-vec2(r)),0.))-r
-    )/smoothness,.0001),2.));
+    )/smoothness,0.0),2.));
 }
 
 
 vec4 colorMix(vec4 a, vec4 b){
+    float foo=a.a/(a.a+b.a);
+
+    // fix divide by zero errors
+    if(a.a+b.a<=.0){ foo=.5; }
+
     return vec4(
-            mix(
-                b.rgb,
-                a.rgb,
-                a.a/(a.a+b.a)
-            ),
+        mix( b.rgb, a.rgb, foo ),
         a.a+b.a
     );
 }
 
 vec4 aThreshold(vec4 a){
-    //a.a=clamp( pow(a.a,smoothness),0.,1.);
-    
-    a.a = 1. - (1.-a.a)*smoothness/2.0;
+    a.a = 1. - (1.-a.a)*smoothness/2.;
     a.a = clamp(a.a,0.,1.);
     return a;
 }
 
 vec2 lengthDir(float dist,float dir){
-    return vec2(cos(dir)*dist,sin(dir)*dist);
+    //return vec2(cos(dir),sin(dir))*dist;
+    return sin( vec2(dir+tau/4.0,dir) )*dist;
 }
 
 
@@ -271,10 +278,6 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
   var c1Location = gl.getUniformLocation(program, "u_color1");
   gl.uniform3f(c1Location , 0.5, 0.5,0.5);
 
-  // color2
-  var c2Location = gl.getUniformLocation(program, "u_color2");
-  gl.uniform3f(c2Location, 0.5, 0.5,0.5);
-
   //currentColor
   var curLocation = gl.getUniformLocation(program, "currentColor");
   gl.uniform3f(curLocation, 70, 238, 196);
@@ -296,39 +299,18 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
 
 
 
-
-  //var texture = gl.createTexture();
-  //gl.bindTexture(gl.TEXTURE_2D, texture);
- 
-  // Set the parameters so we can render any size image.
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
- 
-  // Upload the image into the texture.
-  //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, huslMaxChromaImage);
-
-
-
-
-
-
-
-
-
-
   var menuOpen=false;
   var animationProgress=0;
   var clamp=function(a,b,c){
     return Math.max(b,Math.min(c,a));
   }
+  var colorMenu = document.getElementById("color-menu")
 
-  document.getElementById("color-menu").onclick=function(e){
+  colorMenu.onclick=function(e){
     if(menuOpen){
         var tau=6.28318;
-        var x=(e.clientX-document.getElementById("color-menu").offsetLeft)
-        var y=(e.clientY-document.getElementById("color-menu").offsetTop)
+        var x=(e.clientX-colorMenu.offsetLeft)
+        var y=(e.clientY-colorMenu.offsetTop)
         var direction = (Math.atan2(50-x,50-y)+tau)%tau
         var colorI=Math.round((direction/tau)*8);
         var colors=[
@@ -343,10 +325,10 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
         ]
         var color=colors[(14-colorI)%8];
         gl.uniform3f(curLocation, color[0], color[1], color[2]);
-        document.getElementById("color-menu").classList.remove("menu-open")
+        colorMenu.classList.remove("menu-open")
     }
     if(!menuOpen){
-        document.getElementById("color-menu").classList.add("menu-open")
+        colorMenu.classList.add("menu-open")
     }
     menuOpen=!menuOpen;
   }
@@ -354,17 +336,17 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
   var easeInOut= function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
 
   requestAnimationFrame(function f(){
-        if (menuOpen){
-            animationProgress=clamp(animationProgress+(1/60)/.5,0,1)
-        }
-        if (!menuOpen){
-            animationProgress=clamp(animationProgress-(1/60)/.5,0,1)
-        }
-        gl.uniform3f(c1Location , easeInOut(animationProgress),easeInOut(animationProgress),1.0);  
+        var stepSize=((1/60)/.5)*(menuOpen?1:-1);
+
+        animationProgress=clamp(animationProgress+stepSize,0,1)
+
+        gl.uniform3f(c1Location , easeInOut(animationProgress),1.0,1.0);  
         //gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         requestAnimationFrame(f)
   })
+
+
 
 
 
