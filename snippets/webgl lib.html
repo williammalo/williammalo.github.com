@@ -39,30 +39,23 @@
 
 <script id="2d-vertex-shader" type="x-shader/x-vertex">
 
-precision mediump float;
+precision lowp float;
 
 attribute vec2 a_position;
 uniform vec2 u_resolution;
 
-uniform vec3 u_color1;
+uniform float animationProgress;
 
-varying vec2 position;
 varying vec2 pixelPosition;
 
-varying vec3 color1;
-
-varying float animationProgress;
 varying float smoothness;
 
 void main() {
 
-  position = (a_position+1.0)*0.5;
+  vec2 position = (a_position+1.0)*0.5;
   position.y = 1.0-position.y;
   pixelPosition = position*u_resolution;
 
-  color1=u_color1;
-
-  animationProgress=color1.x;
   smoothness=max((.5-abs(.5-animationProgress))*30.0+animationProgress*10.0,2.0);
 
 
@@ -71,16 +64,13 @@ void main() {
 </script>
 
 <script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
+precision lowp float;
 
 uniform vec2 u_resolution;
 
-varying vec2 position;
 varying vec2 pixelPosition;
 
-varying vec3 color1;
-
-varying float animationProgress;
+uniform float animationProgress;
 varying float smoothness;
 
 uniform vec3 currentColor;
@@ -255,11 +245,7 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
 
   var canvas = document.getElementById("canvas");
 
-  var gl = canvas.getContext("webgl",{
-    //preserveDrawingBuffer: true,
-    //antialias: true,
-    premultipliedAlpha: false
-});
+  var gl = canvas.getContext("webgl");
 
 
   var program = createProgramFromScripts(gl, "2d-vertex-shader", "2d-fragment-shader" );
@@ -267,7 +253,6 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
 
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  gl.clearColor(0, 0, 0, 0);
 
   // position
   var positionLocation = gl.getAttribLocation(program, "a_position");
@@ -277,8 +262,8 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
   gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
   // color1
-  var c1Location = gl.getUniformLocation(program, "u_color1");
-  gl.uniform3f(c1Location , 0.5, 0.5,0.5);
+  var c1Location = gl.getUniformLocation(program, "animationProgress");
+  gl.uniform1f(c1Location , 0.0);
 
   //currentColor
   var curLocation = gl.getUniformLocation(program, "currentColor");
@@ -342,7 +327,7 @@ function createProgramFromScripts(gl, vertexShader, fragmentShader) {
 
         animationProgress=clamp(animationProgress+stepSize,0,1)
 
-        gl.uniform3f(c1Location , easeInOut(animationProgress),1.0,1.0);  
+        gl.uniform1f(c1Location , easeInOut(animationProgress) );  
         //gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         requestAnimationFrame(f)
