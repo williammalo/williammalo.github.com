@@ -151,39 +151,150 @@ void main() {
     colors[6] = vec3(  35, 225, 245 );
     colors[7] = vec3( 141, 180, 251 );
 
-    for(int i=0;i<8;i++){
-        vec3 darker = mix(colors[i],vec3(0),0.2);
-        vec3 lighter=pow(colors[i]/255.0,vec3(2.2));
-        darker=pow(darker/255.0,vec3(2.2));
+    vec3 darkC[8];
 
-        lighter = mix(pow(currentColor/255.0,vec3(2.2)),lighter,animationProgress);
-        darker = mix(pow(mix(currentColor,vec3(0),0.2)/255.0,vec3(2.2)),darker,animationProgress);
+    darkC[0] = pow(mix(colors[0],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[1] = pow(mix(colors[1],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[2] = pow(mix(colors[2],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[3] = pow(mix(colors[3],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[4] = pow(mix(colors[4],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[5] = pow(mix(colors[5],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[6] = pow(mix(colors[6],vec3(0),0.2)/255.0,vec3(2.2));
+    darkC[7] = pow(mix(colors[7],vec3(0),0.2)/255.0,vec3(2.2));
+
+    colors[0] = pow(colors[0]/255.0,vec3(2.2));
+    colors[1] = pow(colors[1]/255.0,vec3(2.2));
+    colors[2] = pow(colors[2]/255.0,vec3(2.2));
+    colors[3] = pow(colors[3]/255.0,vec3(2.2));
+    colors[4] = pow(colors[4]/255.0,vec3(2.2));
+    colors[5] = pow(colors[5]/255.0,vec3(2.2));
+    colors[6] = pow(colors[6]/255.0,vec3(2.2));
+    colors[7] = pow(colors[7]/255.0,vec3(2.2));
+
+    vec3 currentColorL = pow(currentColor/255.0,vec3(2.2));
+    vec3 currentDarkL = pow(mix(currentColor,vec3(0),0.2)/255.0,vec3(2.2));
+    
+
+    objects[0]=circle(
+            mix(currentDarkL,darkC[0],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(0)*(tau/8.0) ),
+            16.
+        );
+    objects[1]=circle(
+            mix(currentDarkL,darkC[1],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(1)*(tau/8.0) ),
+            16.
+        );
+    objects[2]=circle(
+            mix(currentDarkL,darkC[2],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(2)*(tau/8.0) ),
+            16.
+        );
+    objects[3]=circle(
+            mix(currentDarkL,darkC[3],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(3)*(tau/8.0) ),
+            16.
+        );
+    objects[4]=circle(
+            mix(currentDarkL,darkC[4],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(4)*(tau/8.0) ),
+            16.
+        );
+    objects[5]=circle(
+            mix(currentDarkL,darkC[5],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(5)*(tau/8.0) ),
+            16.
+        );
+    objects[6]=circle(
+            mix(currentDarkL,darkC[6],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(6)*(tau/8.0) ),
+            16.
+        );
+    objects[7]=circle(
+            mix(currentDarkL,darkC[7],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(7)*(tau/8.0) ),
+            16.
+        );
+
+ /*   for(int i=0;i<8;i++){
 
         objects[i]=circle(
-            darker,
+            mix(currentDarkL,darkC[i],animationProgress),
             center+lengthDir( animationProgress*60.0, float(i)*(tau/8.0) ),
             16.
         );
         objects[i+8]=circle(
-            lighter,
+            mix(currentColorL,colors[i],animationProgress),
             center+lengthDir( animationProgress*60.0, float(i)*(tau/8.0) ),
             12.
         );
-    }
+    }*/
+
+    objects[8]=circle(
+            mix(currentColorL,colors[0],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(0)*(tau/8.0) ),
+            12.
+        );
+    objects[9]=circle(
+            mix(currentColorL,colors[1],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(1)*(tau/8.0) ),
+            12.
+        );
+    objects[10]=circle(
+            mix(currentColorL,colors[2],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(2)*(tau/8.0) ),
+            12.
+        );
+    objects[11]=circle(
+            mix(currentColorL,colors[3],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(3)*(tau/8.0) ),
+            12.
+        );
+    objects[12]=circle(
+            mix(currentColorL,colors[4],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(4)*(tau/8.0) ),
+            12.
+        );
+    objects[13]=circle(
+            mix(currentColorL,colors[5],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(5)*(tau/8.0) ),
+            12.
+        );
+    objects[14]=circle(
+            mix(currentColorL,colors[6],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(6)*(tau/8.0) ),
+            12.
+        );
+    objects[15]=circle(
+            mix(currentColorL,colors[7],animationProgress),
+            center+lengthDir( animationProgress*60.0, float(7)*(tau/8.0) ),
+            12.
+        );
 
 
     vec4 color = objects[0];
 
-    for(int i=1;i<8;i++){
-        color=colorMix(color,objects[i]);
-    }
+    color=colorMix(color,objects[1]);
+    color=colorMix(color,objects[2]);
+    color=colorMix(color,objects[3]);
+    color=colorMix(color,objects[4]);
+    color=colorMix(color,objects[5]);
+    color=colorMix(color,objects[6]);
+    color=colorMix(color,objects[7]);
     
+  
     color = aThreshold(color);
 
     vec4 layer2 = objects[8];
-    for(int i=9;i<16;i++){
-        layer2=colorMix(layer2,objects[i]);
-    }
+
+    layer2=colorMix(layer2,objects[9]);
+    layer2=colorMix(layer2,objects[10]);
+    layer2=colorMix(layer2,objects[11]);
+    layer2=colorMix(layer2,objects[12]);
+    layer2=colorMix(layer2,objects[13]);
+    layer2=colorMix(layer2,objects[14]);
+    layer2=colorMix(layer2,objects[15]);
+    
     layer2 = aThreshold(layer2);
 
     //add layer 2
