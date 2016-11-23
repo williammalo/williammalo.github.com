@@ -39,6 +39,8 @@
 
 <script id="2d-vertex-shader" type="x-shader/x-vertex">
 
+precision lowp float;
+
 attribute vec2 a_position;
 uniform vec2 u_resolution;
 
@@ -69,7 +71,7 @@ void main() {
 </script>
 
 <script id="2d-fragment-shader" type="x-shader/x-fragment">
-precision highp float;
+precision lowp float;
 
 uniform vec2 u_resolution;
 
@@ -82,8 +84,6 @@ varying float animationProgress;
 varying float smoothness;
 
 uniform vec3 currentColor;
-
-//float smoothness = 30.;
 
 float tau=6.28318;
 
@@ -205,6 +205,8 @@ void main() {
     color.rgb=pow(color.rgb,vec3(1.0/2.2));
 
     gl_FragColor = color;
+    
+    //gl_FragColor = vec4(0,0,1,1);
 }
 </script>
 
