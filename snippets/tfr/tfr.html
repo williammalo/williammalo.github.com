@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<style>
+.tfr-results{
+	position: relative
+
+}
+.tfr-wrap{
+	background: #fff;
+	//background: #fff url(image001.jpg) center -59px;
+	position:absolute;
+	opacity:0;
+	pointer-events:none;
+	width:400px;
+	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	text-align:center;
+	color:#01456A;
+	font-size:15px;
+	box-shadow:0 0 10px rgba(0,0,0,0.5);
+	transition:.2s;
+}
+.tfr-results:hover .tfr-wrap{
+	opacity:1;
+	pointer-events:auto;
+}
+.tfr-footer,.tfr-title-block{
+	background:#01456A;
+	color:#fff;
+}
+.tfr-header{
+	padding-top:17px;
+	padding-bottom:7px;
+	font-size:19px;
+
+}
+.tfr-title-block{
+	padding-bottom:10px;
+	padding-top:13px;
+}
+.tfr-stat{
+	color:#80BD01;
+}
+.tfr-title,.tfr-item,.tfr-button{
+	font-weight:bold;
+}
+.tfr-title{
+	font-size:20px;
+	margin-bottom:2px;
+}
+.tfr-item{
+	text-align:left;
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAAA4CAMAAABDob8bAAAAG1BMVEUAAAAAPE0BPE0BPE1AfCUBPE2AvQCBvwGBvgFIqAY6AAAACHRSTlMAV5rWKv9zwAW8qXYAAAHCSURBVHjaxdjbcoMwDARQdAHz/1/cNLhdYCvky2S6jyGcIZKwIcv/RNQao+K9uNvaERMCtgmdc/fL7vM6Yn7T9xL7VbemwD/rLz/RpbVN8KG/EpRfoQ/5217j0zr70Pcyo7Pv0FGecR2R45yqIz6rw2f9mE6lKdOlO0J6LY+sCPTuBPpin9TBf0Zf9IM6+dM631SuBj7IezAeDjnriEu2BPtxHStHYx2xtu1CxnQNWOrI/Wdaiy4EslG2hQtkzjrtVM4iGdvvpEmu9xX+0OHbRS+Jrued9W/dL2e6proYSnPunruIqt3aWm5XJqG+H/p92DQYJTvp1wLJg15B4smvbSXf306kp7xQ4WmoY515u+roSDx4rG/VI572V+HCI57pzNvVt+ujBUOxzjw/U56+4oBABbob83HUyaeQnvKIUZkTvYdHS7YuPecR+LnezaPBDXo/zwPEKaQznzU49gtulCEerwaJPsjzALE+yvMAsa5rxo81uDj0OR4+6/M8rxDQp3geINbneW4w9B5e5SF1q8SeJTXNvC95nP5SaeZlafFvus/xnEbeuTgjsegihVaXgfByjyN6RL7jIzZm6Ieqn30Bh9FDKSG7DyUAAAAASUVORK5CYII=) 24px 13px no-repeat;
+	background-size:47px 28px;
+	border-top:solid 2px;
+	padding:17px 0;
+	padding-left:86px;
+	font-size:19px;
+}
+.tfr-button{
+	background:#80BD01;
+	display:inline-block;
+	text-transform:uppercase;
+	font-size:19px;
+	padding:10px 26px;
+	border-radius:4px;
+	color:inherit;
+	text-decoration:none;
+	box-shadow: 0 0 0 rgba(0,0,0,0.2),0 0 0 #80BD01;
+	transition:.3s;
+	-webkit-font-smoothing:antialiased;
+}
+.tfr-button:hover{
+	box-shadow: 0 4px 0 rgba(0,0,0,0.2),0 4px 0 #80BD01;
+	transform:translateY(-4px);
+}
+.tfr-footer{
+	padding:20px 0;
+}
+.tfr-header img{
+	vertical-align: middle;
+	margin-right:14px;
+	margin-top:-1px;
+}
+</style>
+
+<div class="tfr-results" id="tfr-results">
+	<img src="http://admin.trueframereport.com/images/trueframereport_embed_pass.jpg">
+	<div class="tfr-wrap">
+		<div class="tfr-header">
+			<img src="TrueFrame-Logo.png" alt="" width="158" height="42">
+			Report Preview
+		</div>
+		<div class="tfr-title-block">
+			<div class="tfr-title">2014 Mercedes Benz E350</div>
+			<div class="tfr-stats">
+				Inspected on <span class="tfr-stat">11/08/2016</span> with <span class="tfr-stat">27,982</span> miles
+			</div>
+		</div>
+		<div class="tfr-item">Passed Cosmetic Analysis</div>
+		<div class="tfr-item">Passed Structural Analysis</div>
+		<div class="tfr-item">Awarded Certificate of Integrity</div>
+		<div class="tfr-footer">
+			<a class="tfr-button" href="" target="_blank">
+				View full report
+			</a>
+		</div>
+	</div>
+</div>
+
+<script>
+(function(){
+	var element = document.querySelector(".tfr-wrap")
+	var tfrResults = document.querySelector("#tfr-results")
+	var detect=true
+	tfrResults.addEventListener("mouseover",function(){
+		if(detect){
+			var rect = element.getBoundingClientRect();
+
+			var wh = (window.innerHeight || document.documentElement.clientHeight);
+			var ww = (window.innerWidth || document.documentElement.clientWidth);
+
+			element.setAttribute("style","left:0;top:100%;")
+
+			if(rect.bottom > wh){
+				element.style.top="calc(100% - "+(rect.bottom-wh)+"px)"
+			}
+			if(rect.right > ww){
+				element.style.left= "-"+(rect.right-ww)+"px"
+			}
+		}
+		detect=false
+	});
+	tfrResults.addEventListener("mouseleave",function(){
+		element.setAttribute("style","left:0;top:100%;")
+		detect=true
+	})
+})()
+</script>

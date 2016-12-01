@@ -1233,6 +1233,161 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
+	"\/snippets\/tfr\/image001.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 120139,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/image001.jpg",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/image001.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/Inspection-Classification-Check.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 7698,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/Inspection-Classification-Check.png",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/Inspection-Classification-Check.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/LIVE CODE\/ajax.link.php": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/ajax.link.php",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/snippets\/tfr\/LIVE CODE\/link.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/link.js",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/min\/link-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/snippets\/tfr\/LIVE CODE\/link.min.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/link.min.js",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/min\/link.min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/snippets\/tfr\/LIVE CODE\/results-all.html": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/results-all.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/snippets\/tfr\/LIVE CODE\/results.html": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/LIVE CODE\/results.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/snippets\/tfr\/logo-button.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 26931,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/logo-button.png",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/logo-button.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/logo.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 1386,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/logo.png",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/logo.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/report-preview1-ver3.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 58885,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/report-preview1-ver3.jpg",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/report-preview1-ver3.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/report-preview1-ver3b.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 58885,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/report-preview1-ver3b.jpg",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/report-preview1-ver3b.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/tfr-fancy.html": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/tfr-fancy.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/snippets\/tfr\/tfr-logo.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 5271,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/tfr-logo.png",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/tfr-logo.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/snippets\/tfr\/tfr.html": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/tfr.html",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
+	"\/snippets\/tfr\/TrueFrame-Logo.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 2082,
+		"inputAbbreviatedPath": "\/snippets\/tfr\/TrueFrame-Logo.png",
+		"outputAbbreviatedPath": "\/snippets\/tfr\/TrueFrame-Logo.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/snippets\/wcollision.js": {
 		"fileType": 64,
 		"ignore": 0,
