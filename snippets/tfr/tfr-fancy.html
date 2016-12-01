@@ -322,33 +322,33 @@
 	        animation-fill-mode:both;
 }
 .tfr-results:hover .tfr-content>:nth-child(1) .tfr-item{
-	-webkit-animation-delay:0s;
-	        animation-delay:0s;
+	-webkit-animation-delay:0s !important;
+	        animation-delay:0s !important;
 	-webkit-animation-play-state: running;
 	        animation-play-state: running; 
 }
 .tfr-results:hover .tfr-content>:nth-child(2) .tfr-item{
-	-webkit-animation-delay:1s;
-	        animation-delay:1s;
+	-webkit-animation-delay:1s !important;
+	        animation-delay:1s !important;
 	-webkit-animation-play-state: running;
 	        animation-play-state: running; 
 }
 .tfr-results:hover .tfr-content>:nth-child(3) .tfr-item{
-	-webkit-animation-delay:2s;
-	        animation-delay:2s;
+	-webkit-animation-delay:2s !important;
+	        animation-delay:2s !important;
 	-webkit-animation-play-state: running;
 	        animation-play-state: running; 
 }
 .tfr-results:hover .tfr-content>:nth-child(4) .tfr-item{
-	-webkit-animation-delay:3s;
-	        animation-delay:3s;
+	-webkit-animation-delay:3s !important;
+	        animation-delay:3s !important;
 	-webkit-animation-play-state: running;
 	        animation-play-state: running; 
 }
 
 .tfr-results:hover .tfr-button{
-	-webkit-animation-delay:4s;
-	        animation-delay:4s;
+	-webkit-animation-delay:4s !important;
+	        animation-delay:4s !important;
 	-webkit-animation-play-state: running;
 	        animation-play-state: running; 
 }
@@ -447,7 +447,7 @@
 			element.setAttribute("style","left:0;top:0;")
 
 			if(rect.top+height > wh){
-				element.style.top="calc(100% - "+((rect.top+height)-wh)+"px)"
+				element.style.top="-"+((rect.top+height)-wh)+"px"
 			}
 			if(rect.left+400 > ww){
 				element.style.left= "-"+((rect.left+400)-ww)+"px"
